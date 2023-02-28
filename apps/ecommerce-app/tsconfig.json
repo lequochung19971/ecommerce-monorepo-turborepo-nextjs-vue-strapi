@@ -1,0 +1,33 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "compilerOptions": {
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/common/*": [
+        "src/common/*"
+      ],
+      "@/common/http/*": [
+        "src/common/http/*"
+      ],
+      "@/modules/*": [
+        "src/modules/*"
+      ],
+      "@/layouts/*": [
+        "src/layouts/*"
+      ],
+      "@/pages/*": [
+        "src/pages/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

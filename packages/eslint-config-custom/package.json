@@ -3,15 +3,30 @@
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "eslint": "^7.23.0",
-    "eslint-config-next": "13.0.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "7.31.8",
-    "eslint-config-turbo": "latest"
-  },
+  "files": [
+    "eslint-next.js"
+  ],
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "@next/eslint-plugin-next": "^13.1.2",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "eslint": "^8.31.0",
+    "eslint-config-turbo": "latest",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-next": "13.1.1",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard-with-typescript": "^27.0.1",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.27.4",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.4"
   },
   "publishConfig": {
     "access": "public"

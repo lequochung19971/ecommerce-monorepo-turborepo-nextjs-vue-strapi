@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  db:
+    container_name: ecommerce-db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: Lequochung@12
+      POSTGRES_USER: lequochung19971
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
