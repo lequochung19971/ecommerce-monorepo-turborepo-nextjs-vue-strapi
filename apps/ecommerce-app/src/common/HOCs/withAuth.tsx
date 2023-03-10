@@ -1,11 +1,19 @@
+import type { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
 
 import { AppRoute } from '@/common/enums';
 import type { NextPageWithLayout } from '@/common/types';
 
-export const withAuth = (Component: NextPageWithLayout) => {
+type WithAuth = (Component: NextPageWithLayout) => FunctionComponent & {
+  getInitialProps?(context: NextPageContext): {} | Promise<{}>;
+} & {
+  getLayout?: ((page: React.ReactElement) => React.ReactNode) | undefined;
+};
+
+export const withAuth: WithAuth = (Component: NextPageWithLayout) => {
   const Auth: NextPageWithLayout = (props) => {
     const session = useSession();
     const router = useRouter();
