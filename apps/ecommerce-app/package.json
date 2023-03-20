@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -28,10 +28,12 @@
     "react-hook-form": "^7.42.0",
     "react-icons": "^4.7.1",
     "react-image-gallery": "^1.2.11",
+    "react-infinite-scroll-component": "^6.1.0",
     "swr": "^2.0.3",
     "ui": "*"
   },
   "devDependencies": {
+    "@types/koa": "^2.13.5",
     "@types/lodash": "^4.14.191",
     "@types/node": "18.11.18",
     "@types/qs": "^6.9.7",

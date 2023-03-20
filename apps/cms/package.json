@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.5",
-    "@strapi/plugin-i18n": "4.5.5",
-    "@strapi/plugin-users-permissions": "4.5.5",
+    "@strapi/plugin-i18n": "4.7.1",
+    "@strapi/plugin-users-permissions": "4.7.1",
     "@strapi/provider-email-nodemailer": "^4.5.6",
     "@strapi/provider-email-sendgrid": "^4.5.6",
-    "@strapi/strapi": "4.5.5",
+    "@strapi/strapi": "4.7.1",
     "pg": "8.6.0",
     "strapi-plugin-transformer": "^2.2.0"
   },

@@ -8,4 +8,5 @@ export enum ApiUrl {
 
   PRODUCTS = '/api/products',
   CATEGORIES = '/api/categories',
+  CATEGORIES_SLUG = '/api/categories/slug',
 }
