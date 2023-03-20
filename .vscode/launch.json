@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "CMS",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "command": "yarn dev --filter=cms",
+      "outFiles": [
+        "${workspaceFolder}/apps/cms/**/*.js",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "yarn dev --filter=ecommerce-app"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000"
+    },
+    {
+      "name": "Next.js: debug full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "yarn dev --filter=ecommerce-app",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
+    },
+  ],
+  "compounds": [
+    {
+      "name": "CMS/ecommerce-app",
+      "configurations": [
+        "CMS",
+        "Next.js: debug full stack"
+      ],
+      "preLaunchTask": "${defaultBuildTask}",
+      "stopAll": true
+    }
+  ]
+}
