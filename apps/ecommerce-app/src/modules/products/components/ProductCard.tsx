@@ -1,6 +1,8 @@
-import { Badge, Box, Card, chakra, Flex, Icon, Image, Tooltip, useColorModeValue } from '@chakra-ui/react';
+import { Badge, Box, chakra, Flex, Icon, Image, Tooltip, useColorModeValue } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { FiShoppingCart } from 'react-icons/fi';
+
+import { MotionCard } from '@/common/components';
 
 import type { Product } from '../types/product';
 
@@ -33,10 +35,22 @@ function Rating({ rating, numReviews }: RatingProps) {
 type ProductCardProps = {
   data: Product;
 };
+
 export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) => {
   const { data } = props;
   return (
-    <Card bg={useColorModeValue('white', 'gray.800')} shadow="lg" position="relative" w="full">
+    <MotionCard
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{
+        duration: 0.2,
+      }}
+      shadow="lg"
+      position="relative"
+      w="full"
+      bg={useColorModeValue('white', 'gray.800')}
+    >
       <Box height={400}>
         <Image
           objectFit="contain"
@@ -78,7 +92,7 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
           </Box>
         </Flex>
       </Box>
-    </Card>
+    </MotionCard>
   );
 };
 
