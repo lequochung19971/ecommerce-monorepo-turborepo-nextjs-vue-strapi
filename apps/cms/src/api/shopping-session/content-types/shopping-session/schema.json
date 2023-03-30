@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "shopping_sessions",
+  "info": {
+    "singularName": "shopping-session",
+    "pluralName": "shopping-sessions",
+    "displayName": "ShoppingSession"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "total": {
+      "type": "decimal"
+    }
+  }
+}
