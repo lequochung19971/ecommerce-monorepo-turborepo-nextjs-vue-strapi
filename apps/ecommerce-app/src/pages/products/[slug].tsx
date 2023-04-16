@@ -9,9 +9,8 @@ import useSWR, { SWRConfig, unstable_serialize } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import { AppRoute } from '@/common/enums';
-import { ApiUrl, httpClient, httpMethods } from '@/common/http';
-import { getCategoryBySlug } from '@/common/http/endpoints/category';
-import { getProducts } from '@/common/http/endpoints/product';
+import { ApiUrl, getCategoriesEndpoint, getCategoryBySlugEndpoint, httpMethods } from '@/common/http';
+import { getProductsEndpoint } from '@/common/http/endpoints/product';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { Category, Product } from '@/modules/products';
 import { ProductCard } from '@/modules/products/components';
@@ -51,8 +50,7 @@ const generateGetProductsParams = ({ slug, page = 1 }: QueryParams) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async ({}) => {
-  debugger;
-  const childCategories = await httpClient.get<{ data: Category[] }>(ApiUrl.CATEGORIES, {
+  const childCategories = await getCategoriesEndpoint<{ data: Category[] }>({
     params: {
       populate: {
         0: 'childCategories',
@@ -60,7 +58,6 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
       },
     },
   });
-
   const flattenCategories = childCategories.data.data.reduce((result, category) => {
     result.push(category);
     if (category.childCategories?.length) {
@@ -83,13 +80,13 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const response = await getProducts({
+  const response = await getProductsEndpoint({
     params: generateGetProductsParams({
       slug: params?.slug as string,
     }),
   });
 
-  const categoryResponse = await getCategoryBySlug(params?.slug as string);
+  const categoryResponse = await getCategoryBySlugEndpoint(params?.slug as string);
 
   return {
     props: {
@@ -133,7 +130,11 @@ const ProductsCategory: NextPage<ProductsCategoryPageProps> = ({ params, categor
   };
 
   const router = useRouter();
-  const { data = [], setSize } = useSWRInfinite(
+  const {
+    data = [],
+    setSize,
+    isLoading,
+  } = useSWRInfinite(
     (index: number, previousPageData) => {
       if (previousPageData && !previousPageData?.data?.length) return null;
 
@@ -156,6 +157,7 @@ const ProductsCategory: NextPage<ProductsCategoryPageProps> = ({ params, categor
   const products = data.reduce((res, d) => {
     return res.concat(d.data);
   }, [] as Product[]);
+
   const { data: categoriesResponse } = useSWR(
     httpMethods.get(ApiUrl.CATEGORIES, {
       params: {
@@ -192,14 +194,21 @@ const ProductsCategory: NextPage<ProductsCategoryPageProps> = ({ params, categor
     router.push(`${AppRoute.PRODUCTS}/${newValue?.slug}`);
   };
 
+  const renderLoader = () => {
+    if (isLoading) {
+      return <h4>Loading...</h4>;
+    }
+    return null;
+  };
+
   return (
     <InfiniteScroll
       dataLength={data?.length ?? 0}
       next={() => {
         setSize((prev) => prev + 1);
       }}
-      hasMore={true}
-      loader={<h4>Loading...</h4>}
+      hasMore
+      loader={renderLoader()}
     >
       <Box p="8">
         <Heading fontSize="2xl" fontWeight="extrabold" mb="4" w="full">

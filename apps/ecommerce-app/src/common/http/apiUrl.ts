@@ -9,4 +9,8 @@ export enum ApiUrl {
   PRODUCTS = '/api/products',
   CATEGORIES = '/api/categories',
   CATEGORIES_SLUG = '/api/categories/slug',
+
+  SHOPPING_SESSION_CART = '/api/shopping-session/cart',
+  SHOPPING_SESSION_ITEMS_QUANTITY = '/api/shopping-session/items-quantity',
+  CART_ITEMS = '/api/cart-items',
 }

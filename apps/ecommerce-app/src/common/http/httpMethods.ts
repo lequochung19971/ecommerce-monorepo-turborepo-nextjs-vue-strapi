@@ -13,25 +13,30 @@ export const httpMethods: HttpMethod = {
     return {
       ...config,
       url,
+      method: 'GET',
     };
   },
   post: (url, data, config = {}) => ({
     ...config,
     url,
     data,
+    method: 'POST',
   }),
   delete: (url, config = {}) => ({
     ...config,
     url,
+    method: 'DELETE',
   }),
   patch: (url, data, config = {}) => ({
     ...config,
     url,
     data,
+    method: 'PATCH',
   }),
   put: (url, data, config = {}) => ({
     ...config,
     url,
     data,
+    method: 'PUT',
   }),
 };

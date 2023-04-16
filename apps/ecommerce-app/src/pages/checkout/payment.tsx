@@ -26,7 +26,7 @@ import * as React from 'react';
 
 import masterIcon from '@/common/assets/mastercard.svg';
 import visaIcon from '@/common/assets/visa.svg';
-import { CartItem, formatPrice, OrderSummaryItem } from '@/modules/checkout/components';
+import { CartItemComponent, formatPrice, OrderSummaryItem } from '@/modules/checkout/components';
 
 export const cartData = [
   {
@@ -229,7 +229,7 @@ const PaymentPage: NextPage = () => (
                 <AccordionPanel p="0">
                   <Stack spacing="6" maxHeight="500px" overflow="auto">
                     {cartData.map((item) => (
-                      <CartItem key={item.id} {...item} mode="view" />
+                      <CartItemComponent key={item.id} {...item} mode="view" />
                     ))}
                   </Stack>
                 </AccordionPanel>

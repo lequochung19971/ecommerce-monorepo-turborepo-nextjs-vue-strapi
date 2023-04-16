@@ -83,11 +83,12 @@ const options: AuthOptions = {
       return Promise.resolve(updatedToken);
     },
 
-    // session: async ({ session, user }) => {
-    //   session.jwt = user?.jwt;
-    //   session.id = user?.user?.id;
-    //   return Promise.resolve(session);
-    // },
+    session: async ({ session, user, token }) => {
+      // session.token = user?.jwt;
+      // session.id = user?.user?.id;
+      session.user = token;
+      return Promise.resolve(session);
+    },
   },
 };
 

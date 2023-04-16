@@ -5,10 +5,10 @@ import type { Product } from '@/modules/products';
 import { ApiUrl } from '../../apiUrl';
 import { httpClient } from '../../httpClient';
 
-export async function getProducts<
+export async function getProductsEndpoint<
   T = {
     data: Product[];
   },
 >(config: AxiosRequestConfig) {
-  return httpClient.get<T>(ApiUrl.PRODUCTS, config).then((res) => res);
+  return httpClient.get<T>(ApiUrl.PRODUCTS, config);
 }
