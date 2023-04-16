@@ -4,10 +4,11 @@
   "info": {
     "singularName": "shopping-session",
     "pluralName": "shopping-sessions",
-    "displayName": "ShoppingSession"
+    "displayName": "ShoppingSession",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
