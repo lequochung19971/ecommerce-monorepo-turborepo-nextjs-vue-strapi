@@ -20,7 +20,7 @@ type CartItemComponentProps = {
   mode?: 'view' | 'edit';
   onChangeQuantity?: (id: string, quantity: number) => void;
   onClickGiftWrapping?: () => void;
-  onClickDelete?: () => void;
+  onClickDelete?: (id: string) => void;
 } & CartItemModel;
 
 const QuantityInput: React.FunctionComponent<NumberInputProps> = (props) => {
@@ -52,13 +52,14 @@ export const CartItemComponent = (props: CartItemComponentProps) => {
           <Flex width="full" justify="space-between" display={{ base: 'none', md: 'flex' }}>
             <QuantityInput
               width="5rem"
+              min={1}
               value={quantity}
               onChange={(_valueAsString, valueAsNumber) => {
                 onChangeQuantity?.(id, valueAsNumber);
               }}
             />
             <PriceTag price={+product.price} currency={currency} />
-            <CloseButton aria-label={`Delete ${name} from cart`} onClick={onClickDelete} />
+            <CloseButton aria-label={`Delete ${name} from cart`} onClick={() => onClickDelete?.(id)} />
           </Flex>
 
           {/* Mobile */}
@@ -68,6 +69,8 @@ export const CartItemComponent = (props: CartItemComponentProps) => {
             </Link>
             <QuantityInput
               width="5rem"
+              min={1}
+              max={100}
               value={quantity}
               onChange={(_valueAsString, valueAsNumber) => {
                 onChangeQuantity?.(id, valueAsNumber);

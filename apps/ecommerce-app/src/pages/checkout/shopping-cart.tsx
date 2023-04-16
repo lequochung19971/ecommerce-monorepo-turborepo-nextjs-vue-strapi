@@ -6,7 +6,7 @@ import * as React from 'react';
 import useSWR from 'swr';
 
 import { ApiUrl, httpMethods } from '@/common/http';
-import { putCartItem } from '@/common/http/endpoints/cart-item';
+import { deleteCartItemEndpoint, putCartItemEndpoint } from '@/common/http/endpoints/cart-item';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { QueryResponse } from '@/common/types';
 import { CartItemComponent, CartOrderSummary } from '@/modules/checkout/components';
@@ -47,7 +47,7 @@ const ShoppingCartPage: NextPage = () => {
       );
 
       // Update quantity of this cart item
-      await putCartItem<{ data: CartItem }>(id, {
+      await putCartItemEndpoint<{ data: CartItem }>(id, {
         data: {
           quantity,
         },
@@ -67,6 +67,32 @@ const ShoppingCartPage: NextPage = () => {
           revalidate: false,
         },
       );
+      mutateGetItemsQuantity(itemsQuantity);
+      throw error;
+    }
+  };
+
+  const handleOnDelete = async (id: string) => {
+    const cartItemIndex = response?.data?.findIndex((cartItem) => cartItem.id === id) ?? -1;
+    const currentCartItem = response?.data[cartItemIndex];
+    try {
+      mutateQueryCartItems(
+        produce(response, (draft) => {
+          if (!draft) return;
+
+          if (cartItemIndex > -1) {
+            draft.data.splice(cartItemIndex, 1);
+          }
+        }),
+        {
+          revalidate: false,
+        },
+      );
+      await deleteCartItemEndpoint(id);
+      mutateGetItemsQuantity(itemsQuantity - (currentCartItem?.quantity ?? 0));
+    } catch (error) {
+      mutateQueryCartItems(response);
+      mutateGetItemsQuantity(itemsQuantity);
       throw error;
     }
   };
@@ -82,7 +108,13 @@ const ShoppingCartPage: NextPage = () => {
 
             <Stack spacing="6">
               {(response?.data ?? []).map((item) => (
-                <CartItemComponent key={item.id} {...item} currency="VND" onChangeQuantity={handleOnChangeQuantity} />
+                <CartItemComponent
+                  key={item.id}
+                  {...item}
+                  currency="VND"
+                  onChangeQuantity={handleOnChangeQuantity}
+                  onClickDelete={handleOnDelete}
+                />
               ))}
             </Stack>
           </Card>
