@@ -5,7 +5,7 @@
 import { factories } from "@strapi/strapi";
 import { Controller } from "@strapi/strapi/lib/core-api/controller";
 import { AddItemToShoppingSessionRequest } from "../types";
-import { addItemToShoppingSessionRequestValidation as addItemToShoppingSessionRequestValidation } from "../validation";
+import { addItemToShoppingSessionRequestValidation } from "../validation";
 
 export default factories.createCoreController(
   "api::shopping-session.shopping-session",
@@ -13,13 +13,12 @@ export default factories.createCoreController(
     async addItemToShoppingSession(ctx) {
       try {
         const that = this as Controller;
-        const { userId, productId } = ctx.request
+        const { user } = ctx.state;
+        const { productId } = ctx.request
           .body as AddItemToShoppingSessionRequest;
-        console.log(ctx.request.header);
 
         const validationResult =
           addItemToShoppingSessionRequestValidation.validate({
-            userId,
             productId,
           });
 
@@ -29,14 +28,6 @@ export default factories.createCoreController(
             validationResult.error.details
           );
         }
-
-        const user = await strapi.db
-          .query("plugin::users-permissions.user")
-          .findOne({
-            where: {
-              id: userId,
-            },
-          });
 
         if (!user) {
           return ctx.notFound("User is not found");
@@ -62,6 +53,33 @@ export default factories.createCoreController(
         ctx.response.body = await that.sanitizeOutput(result, ctx);
       } catch (error) {
         ctx.internalServerError(error);
+      }
+    },
+    async getShoppingSessionItemsQuantity(ctx) {
+      try {
+        const that = this as Controller;
+        const { user } = ctx.state;
+
+        const cartItems = await strapi.db
+          .query("api::cart-item.cart-item")
+          .findMany({
+            where: {
+              shopping_session: {
+                user: {
+                  id: user.id,
+                },
+              },
+            },
+          });
+
+        const quantity = (cartItems ?? []).reduce((result, cartItem) => {
+          result += cartItem.quantity;
+          return result;
+        }, 0);
+
+        ctx.response.body = await that.sanitizeOutput(quantity, ctx);
+      } catch (error) {
+        throw error;
       }
     },
   })

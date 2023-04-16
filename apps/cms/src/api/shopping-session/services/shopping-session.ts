@@ -13,20 +13,20 @@ export default factories.createCoreService(
   ({ strapi }) => ({
     async addItemToShoppingSession(args: addItemToShoppingSessionArgs) {
       let { product, user } = args;
-
-      let shoppingSession = await strapi.db
-        .query("api::shopping-session.shopping-session")
-        .findOne({
-          where: {
-            user: {
-              id: user.id,
-            },
-          },
-        });
-
       try {
+        let shoppingSession = await strapi.db
+          .query("api::shopping-session.shopping-session")
+          .findOne({
+            where: {
+              user: {
+                id: user.id,
+              },
+            },
+          });
+
         return await strapi.db.connection.transaction(async (transacting) => {
           try {
+            // If there is no shopping session, will create a new one and add the first item
             if (!shoppingSession) {
               shoppingSession = await strapi
                 .query("api::shopping-session.shopping-session")
