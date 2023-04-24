@@ -71,12 +71,10 @@ export default factories.createCoreController(
               },
             },
           });
-
         const quantity = (cartItems ?? []).reduce((result, cartItem) => {
           result += cartItem.quantity;
           return result;
         }, 0);
-
         ctx.response.body = await that.sanitizeOutput(quantity, ctx);
       } catch (error) {
         throw error;

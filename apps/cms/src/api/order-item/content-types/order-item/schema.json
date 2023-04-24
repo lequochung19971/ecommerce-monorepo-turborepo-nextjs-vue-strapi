@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_items",
+  "info": {
+    "singularName": "order-item",
+    "pluralName": "order-items",
+    "displayName": "OrderItem"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quantity": {
+      "type": "integer"
+    },
+    "order_detail": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order-detail.order-detail",
+      "inversedBy": "order_items"
+    }
+  }
+}

@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "shopping_sessions",
+  "collectionName": "order_details",
   "info": {
-    "singularName": "shopping-session",
-    "pluralName": "shopping-sessions",
-    "displayName": "ShoppingSession",
+    "singularName": "order-detail",
+    "pluralName": "order-details",
+    "displayName": "OrderDetail",
     "description": ""
   },
   "options": {
@@ -20,11 +20,11 @@
     "total": {
       "type": "decimal"
     },
-    "cart_items": {
+    "order_items": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::cart-item.cart-item",
-      "mappedBy": "shopping_session"
+      "target": "api::order-item.order-item",
+      "mappedBy": "order_detail"
     }
   }
 }
