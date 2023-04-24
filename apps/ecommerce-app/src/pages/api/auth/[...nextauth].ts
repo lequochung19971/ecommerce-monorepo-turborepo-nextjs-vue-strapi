@@ -23,15 +23,15 @@ const options: AuthOptions = {
       async authorize(credentials) {
         // eslint-disable-next-line no-useless-catch
         try {
-          // const { data } = await httpClient.post<UserLoginResponse>(ApiUrl.AUTH_LOCAL, {
-          //   identifier: credentials?.email,
-          //   password: credentials?.password,
-          // });
+          const { data } = await httpClient.post<UserLoginResponse>(ApiUrl.AUTH_LOCAL, {
+            identifier: credentials?.email,
+            password: credentials?.password,
+          });
           return {
-            id: '',
-            email: 'lequochung19971@gmail.com',
-            name: 'lequochung1997',
-            accessToken: '',
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.username,
+            accessToken: data.jwt,
           };
           // eslint-disable-next-line no-useless-catch
         } catch (e) {
