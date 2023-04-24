@@ -1,11 +1,12 @@
-import { Button, Flex, Heading, Link, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react';
+import { Flex, Heading, Link, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react';
+import type { Variants } from 'framer-motion';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 
+import { MotionBox, MotionButton } from '@/common/components';
 import { AppRoute } from '@/common/enums';
-
-import { formatPrice } from './PriceTag';
+import { formatPrice } from '@/common/utilts/formatPrice';
 
 type OrderSummaryItemProps = {
   label: string;
@@ -25,14 +26,40 @@ export const OrderSummaryItem = (props: OrderSummaryItemProps) => {
   );
 };
 
-export const CartOrderSummary = () => {
+type CartOrderSummaryProps = {
+  subTotal: number;
+  total: number;
+};
+const variants: Variants = {
+  rest: {
+    x: 0,
+    transition: {
+      duration: 0.3,
+      type: 'tween',
+      ease: 'easeIn',
+    },
+  },
+
+  hover: {
+    x: 10,
+    transition: {
+      duration: 0.4,
+      type: 'tween',
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeOut',
+    },
+  },
+};
+export const CartOrderSummary: React.FunctionComponent<CartOrderSummaryProps> = (props) => {
+  const { subTotal, total } = props;
   const router = useRouter();
   return (
     <Stack spacing="8" width="full">
       <Heading size="md">Order Summary</Heading>
 
       <Stack spacing="6">
-        <OrderSummaryItem label="Subtotal" value={formatPrice(597)} />
+        <OrderSummaryItem label="Subtotal" value={formatPrice(subTotal)} />
         <OrderSummaryItem label="Shipping + Tax">
           <Link href="#" textDecor="underline">
             Calculate shipping
@@ -48,19 +75,26 @@ export const CartOrderSummary = () => {
             Total
           </Text>
           <Text fontSize="xl" fontWeight="extrabold">
-            {formatPrice(597)}
+            {formatPrice(total)}
           </Text>
         </Flex>
       </Stack>
-      <Button
+      <MotionButton
+        initial="rest"
+        animate="rest"
+        whileHover="hover"
         colorScheme="blue"
         size="lg"
         fontSize="md"
-        rightIcon={<FaArrowRight />}
+        rightIcon={
+          <MotionBox variants={variants}>
+            <FaArrowRight />
+          </MotionBox>
+        }
         onClick={() => router.push(AppRoute.CHECKOUT_PAYMENT)}
       >
         Checkout
-      </Button>
+      </MotionButton>
     </Stack>
   );
 };

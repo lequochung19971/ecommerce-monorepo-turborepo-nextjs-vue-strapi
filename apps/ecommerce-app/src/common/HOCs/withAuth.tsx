@@ -2,7 +2,7 @@ import type { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import type { FunctionComponent } from 'react';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 import { AppRoute } from '@/common/enums';
 import type { NextPageWithLayout } from '@/common/types';
@@ -18,7 +18,7 @@ export const withAuth: WithAuth = (Component: NextPageWithLayout) => {
     const session = useSession();
     const router = useRouter();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (router.pathname === AppRoute.AUTH_SIGN_IN && session.data) {
         router.push(AppRoute.HOME);
       }

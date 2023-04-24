@@ -2,6 +2,8 @@ import type { StackProps, TextProps } from '@chakra-ui/react';
 import { HStack, Text, useColorModeValue as mode } from '@chakra-ui/react';
 import * as React from 'react';
 
+import { formatPrice } from '@/common/utilts/formatPrice';
+
 interface PriceTagProps {
   currency: string;
   price: number;
@@ -40,16 +42,6 @@ const Price = (props: PriceProps) => {
 const SalePrice = (props: TextProps) => (
   <Text as="span" fontWeight="semibold" color={mode('gray.800', 'gray.100')} {...props} />
 );
-
-export function formatPrice(value: number, opts: { locale?: string; currency?: string } = {}) {
-  const { locale = 'en-US', currency = 'USD' } = opts;
-  const formatter = new Intl.NumberFormat(locale, {
-    currency,
-    style: 'currency',
-    maximumFractionDigits: 2,
-  });
-  return formatter.format(value);
-}
 
 export const PriceTag = (props: PriceTagProps) => {
   const { price, currency, salePrice, rootProps, priceProps, salePriceProps } = props;

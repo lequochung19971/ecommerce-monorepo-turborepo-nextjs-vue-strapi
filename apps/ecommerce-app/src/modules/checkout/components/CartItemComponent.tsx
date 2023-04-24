@@ -11,6 +11,8 @@ import {
 } from '@chakra-ui/react';
 import * as React from 'react';
 
+import { MotionFlex } from '@/common/components';
+
 import type { CartItem as CartItemModel } from '../types';
 import CartProductMeta from './CartProductMeta';
 import { PriceTag } from './PriceTag';
@@ -37,9 +39,15 @@ const QuantityInput: React.FunctionComponent<NumberInputProps> = (props) => {
 
 export const CartItemComponent = (props: CartItemComponentProps) => {
   const { id, quantity, currency = 'VND', onChangeQuantity, onClickDelete, mode = 'edit', product } = props;
-  console.log(product);
   return (
-    <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align="center">
+    <MotionFlex
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      direction={{ base: 'column', md: 'row' }}
+      justify="space-between"
+      align="center"
+    >
       <CartProductMeta
         name={product.name}
         image={`${process.env.NEXT_PUBLIC_API_URL}${product.media?.[0].url}`}
@@ -58,7 +66,7 @@ export const CartItemComponent = (props: CartItemComponentProps) => {
                 onChangeQuantity?.(id, valueAsNumber);
               }}
             />
-            <PriceTag price={+product.price} currency={currency} />
+            <PriceTag price={+product.price * quantity} currency={currency} />
             <CloseButton aria-label={`Delete ${name} from cart`} onClick={() => onClickDelete?.(id)} />
           </Flex>
 
@@ -80,7 +88,7 @@ export const CartItemComponent = (props: CartItemComponentProps) => {
           </Flex>
         </>
       )}
-    </Flex>
+    </MotionFlex>
   );
 };
 export default CartItemComponent;
