@@ -2,6 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
+    "NEXTAUTH_URL",
+    "NEXTAUTH_SECRET",
     "NEXT_PUBLIC_API_URL",
     "NEXT_PUBLIC_API_URL",
     "GOOGLE_CLIENT_ID",
