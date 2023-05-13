@@ -1,2 +1,3 @@
 [config]
+command = chmod +x deploy.sh
 command = bash deploy.sh
