@@ -73,10 +73,11 @@ echo Handling Basic Web Site deployment NEW.
 
 echo Install packages
 yarn install
+exitWithMessageOnError "yarn failed"
 
 echo Build App
-
 yarn build
+exitWithMessageOnError "build failed"
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
