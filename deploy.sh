@@ -77,7 +77,7 @@ npm -v
 yarn -v
 npm install
 exitWithMessageOnError "npm failed"
-
+ls ./node_modules
 echo Build App
 npm run build
 exitWithMessageOnError "build failed"
