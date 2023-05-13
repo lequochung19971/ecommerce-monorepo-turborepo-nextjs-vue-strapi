@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:cms": "yarn build --filter=cms",
+    "build:ecommerce-app": "yarn build --filter=ecommerce-app",
     "dev": "turbo run dev",
     "dev:web": "yarn dev --filter=ecommerce-app",
     "dev:cms": "yarn dev --filter=cms",
