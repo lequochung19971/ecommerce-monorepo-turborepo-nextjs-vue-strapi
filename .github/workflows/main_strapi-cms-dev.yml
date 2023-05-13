@@ -35,7 +35,10 @@ jobs:
           npm run build:cms --if-present
 
       - name: log source structure
-        run: ls -la
+        run: |
+          ls -la
+          ls ./apps
+          ls ./packages
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
