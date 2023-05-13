@@ -76,7 +76,7 @@ pushd %DEPLOYMENT_SOURCE%
 
 ls ./apps
 npm cache clean -f
-rm -rf node_modulese
+rm -rf node_modules
 npm install
 exitWithMessageOnError "npm failed"
 ls ./node_modules
