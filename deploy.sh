@@ -75,7 +75,7 @@ echo Install packages
 node -v
 npm -v
 yarn -v
-yarn install --network-timeout 240000 --unsafe-perm
+npm install
 exitWithMessageOnError "yarn failed"
 
 echo Build App
