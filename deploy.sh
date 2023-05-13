@@ -72,8 +72,7 @@ fi
 echo Handling Basic Web Site deployment NEW.
 
 echo Install packages
-yarn cache clean
-yarn install --network-timeout 1000000
+yarn install --network-timeout 240000
 exitWithMessageOnError "yarn failed"
 
 echo Build App
