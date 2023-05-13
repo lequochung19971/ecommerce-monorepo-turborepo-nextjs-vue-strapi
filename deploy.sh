@@ -69,8 +69,11 @@ fi
 # Deployment
 # ----------
 
-echo Handling Basic Web Site deployment.
+echo Handling Basic Web Site deployment NEW.
 
+npm install
+
+npm run build
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
 
