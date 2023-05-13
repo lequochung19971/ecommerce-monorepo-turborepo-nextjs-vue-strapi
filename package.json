@@ -11,8 +11,9 @@
     "build:cms": "yarn build --filter=cms",
     "build:ecommerce-app": "yarn build --filter=ecommerce-app",
     "dev": "turbo run dev",
-    "dev:web": "yarn dev --filter=ecommerce-app",
-    "dev:cms": "yarn dev --filter=cms",
+    "dev:web": "yarn workspace ecommerce-app start",
+    "dev:cms": "yarn workspace cms start",
+    "start:cms": "yarn start --filter=cms",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -22,7 +23,7 @@
     "turbo": "latest"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=14.0.0"
   },
   "dependencies": {},
   "packageManager": "yarn@1.22.19"
