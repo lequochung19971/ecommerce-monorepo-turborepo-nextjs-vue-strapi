@@ -76,10 +76,10 @@ node -v
 npm -v
 yarn -v
 npm install
-exitWithMessageOnError "yarn failed"
+exitWithMessageOnError "npm failed"
 
 echo Build App
-yarn build
+npm build
 exitWithMessageOnError "build failed"
 
 # 1. KuduSync
