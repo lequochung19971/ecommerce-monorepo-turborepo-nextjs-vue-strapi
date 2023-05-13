@@ -39,6 +39,7 @@ jobs:
           ls -la
           ls ./apps
           ls ./packages
+          chmod +x deploy.sh
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
