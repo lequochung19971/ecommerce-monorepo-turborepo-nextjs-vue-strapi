@@ -46,8 +46,6 @@ jobs:
           name: node-app
           path: |
             .
-            !./apps/docs
-            !./apps/ecommerce-app
 
   deploy:
     runs-on: ubuntu-latest
