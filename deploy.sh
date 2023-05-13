@@ -71,9 +71,10 @@ fi
 
 echo Handling Basic Web Site deployment NEW.
 
-npm install
+echo Build App
 
-npm run build
+yarn build
+
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
 
