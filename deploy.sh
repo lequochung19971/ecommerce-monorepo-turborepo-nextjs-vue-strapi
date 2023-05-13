@@ -49,12 +49,6 @@ else
   KUDU_SERVICE=true
 fi
 
-echo Install npm packages
-call npm install
-
-echo Build
-call npm run build
-
 if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
   # Install kudu sync
   echo Installing Kudu Sync
