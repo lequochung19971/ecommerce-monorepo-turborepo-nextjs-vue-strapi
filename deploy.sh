@@ -72,6 +72,9 @@ fi
 echo Handling Basic Web Site deployment NEW.
 
 echo Install packages
+node -v
+npm -v
+yarn -v
 yarn install --network-timeout 240000
 exitWithMessageOnError "yarn failed"
 
