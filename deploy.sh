@@ -72,9 +72,7 @@ fi
 echo Handling Basic Web Site deployment NEW.
 
 echo Install packages
-node -v
-npm -v
-yarn -v
+ls ./apps
 npm cache clean --force
 npm install
 exitWithMessageOnError "npm failed"
