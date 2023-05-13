@@ -1,3 +1,4 @@
 [config]
 command = chmod +x deploy.sh
+command = ls -la
 command = bash deploy.sh
