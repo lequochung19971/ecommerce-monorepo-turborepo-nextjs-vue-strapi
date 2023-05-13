@@ -23,10 +23,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-      - name: remove unrelated repos
-        run: |
-          rm -r -f ./apps/docs
-          rm -r -f ./apps/ecommerce-app
+      # - name: remove unrelated repos
+      #   run: |
+      #     rm -r -f ./apps/docs
+      #     rm -r -f ./apps/ecommerce-app
 
       # - name: npm install, build
       #   run: |
