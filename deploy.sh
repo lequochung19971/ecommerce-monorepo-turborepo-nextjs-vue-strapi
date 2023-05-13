@@ -71,6 +71,9 @@ fi
 
 echo Handling Basic Web Site deployment NEW.
 
+echo Install packages
+yarn install
+
 echo Build App
 
 yarn build
