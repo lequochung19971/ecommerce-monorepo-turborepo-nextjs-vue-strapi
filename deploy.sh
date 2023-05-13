@@ -75,6 +75,7 @@ echo Install packages
 node -v
 npm -v
 yarn -v
+npm cache clean --force
 npm install
 exitWithMessageOnError "npm failed"
 ls ./node_modules
