@@ -79,7 +79,7 @@ npm install
 exitWithMessageOnError "npm failed"
 
 echo Build App
-npm build
+npm run build
 exitWithMessageOnError "build failed"
 
 # 1. KuduSync
