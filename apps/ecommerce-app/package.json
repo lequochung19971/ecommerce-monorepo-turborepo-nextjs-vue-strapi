@@ -46,5 +46,9 @@
     "ts-essentials": "^9.3.0",
     "tsconfig": "*",
     "typescript": "^4.9.4"
+  },
+  "engines": {
+    "node": ">=18.16.0",
+    "npm": ">=8.0.0"
   }
 }
