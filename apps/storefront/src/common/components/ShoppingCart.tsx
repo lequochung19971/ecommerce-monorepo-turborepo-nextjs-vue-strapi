@@ -13,7 +13,6 @@ import { MotionBox } from './chakra-motion/MotionBox';
 
 const variants: AnimationProps['variants'] = {
   start: () => {
-    console.log('start');
     return {
       rotate: [-15, 20, 0],
       transition: {
@@ -31,9 +30,7 @@ export const ShoppingCart: React.FunctionComponent = () => {
   const { data = 0, isValidating } = useSWR(httpMethods.get(ApiUrl.SHOPPING_SESSION_ITEMS_QUANTITY), httpFetcher());
   const controls = useAnimation();
   useEffect(() => {
-    console.log(isValidating);
     if (isValidating) {
-      console.log(isValidating);
       controls.start('start');
     }
   }, [controls, isValidating]);

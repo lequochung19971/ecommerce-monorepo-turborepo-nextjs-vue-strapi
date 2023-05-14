@@ -10,9 +10,9 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "build:cms": "npm run -w cms build",
-    "build:ecommerce-app": "npm run -w ecommerce-app build",
+    "build:storefront": "npm run -w storefront build",
     "start:cms": "npm run -w cms start",
-    "start:ecommerce-app": "npm run -w ecommerce-app start",
+    "start:storefront": "npm run -w storefront start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

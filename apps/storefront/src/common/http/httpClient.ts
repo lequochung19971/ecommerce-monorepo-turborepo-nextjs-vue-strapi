@@ -18,7 +18,7 @@ type ResponseParams = Parameters<typeof httpClient.interceptors.response.use>;
 const requestFulfilled: RequestParams[0] = async (config) => {
   const sessionData = await getSession();
   if (sessionData) {
-    config.headers.setAuthorization(`Bearer ${sessionData.user?.accessToken}`);
+    (config.headers as any)?.setAuthorization(`Bearer ${sessionData.user?.accessToken}`);
   }
 
   return config;
