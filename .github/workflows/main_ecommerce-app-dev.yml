@@ -16,7 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment:
+      name: 'Production'
     steps:
       - uses: actions/checkout@v2
 
@@ -29,11 +30,11 @@ jobs:
         run: |
           cd ./apps/ecommerce-app
           touch .env
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > .env
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" > .env
-          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" > .env
-          echo "NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}" > .env
-          echo "NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}" > .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+          echo "NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}" >> .env
+          echo "NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}" >> .env
           cat .env
 
       - name: Remove unrelated repos
