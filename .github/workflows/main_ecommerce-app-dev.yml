@@ -3,6 +3,9 @@
 
 name: Build and deploy ecommerce-app workspace to Azure Web App
 
+env:
+  WORKSPACE_URL: apps/ecommerce-app
+
 on:
   push:
     branches:
@@ -28,13 +31,11 @@ jobs:
 
       - name: Create env file
         run: |
-          cd ./apps/ecommerce-app
+          cd ./$WORKSPACE_URL
           touch .env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
           echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
-          echo "NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}" >> .env
-          echo "NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}" >> .env
           cat .env
 
       - name: Remove unrelated repos
