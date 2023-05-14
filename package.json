@@ -8,13 +8,11 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:cms": "yarn build --filter=cms",
-    "build:ecommerce-app": "yarn build --filter=ecommerce-app",
+    "build:cms": "npm workspace cms build",
+    "build:ecommerce-app": "npm workspace ecommerce-app build",
     "dev": "turbo run dev",
-    "dev:web": "yarn workspace ecommerce-app start",
-    "dev:cms": "yarn workspace cms start",
-    "start:cms": "yarn start --filter=cms",
-    "start": "npm run -w cms start",
+    "start:cms": "npm workspace cms start",
+    "start:ecommerce-app": "npm workspace ecommerce-app start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
