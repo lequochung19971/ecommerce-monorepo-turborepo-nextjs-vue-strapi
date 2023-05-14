@@ -1,2 +1,2 @@
 [config]
-command=bash deploy.sh
+ENABLE_ORYX_BUILD=true
