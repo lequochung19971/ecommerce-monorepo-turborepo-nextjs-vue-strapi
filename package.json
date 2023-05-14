@@ -8,9 +8,9 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:cms": "npm workspace cms build",
-    "build:ecommerce-app": "npm workspace ecommerce-app build",
     "dev": "turbo run dev",
+    "build:cms": "npm run -w cms build",
+    "build:ecommerce-app": "npm run -w ecommerce-app build",
     "start:cms": "npm run -w cms start",
     "start:ecommerce-app": "npm run -w ecommerce-app start",
     "lint": "turbo run lint",
