@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { set } from 'lodash';
 import { getSession } from 'next-auth/react';
 import { stringify } from 'qs';
 
@@ -18,7 +19,10 @@ type ResponseParams = Parameters<typeof httpClient.interceptors.response.use>;
 const requestFulfilled: RequestParams[0] = async (config) => {
   const sessionData = await getSession();
   if (sessionData) {
-    (config.headers as any)?.setAuthorization(`Bearer ${sessionData.user?.accessToken}`);
+    config.headers = {
+      ...(config.headers ?? {}),
+      Authorization: `Bearer ${sessionData.user?.accessToken}`,
+    } as any;
   }
 
   return config;
