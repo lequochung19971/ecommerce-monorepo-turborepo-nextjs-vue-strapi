@@ -72,11 +72,10 @@ fi
 echo Handling Basic Web Site deployment NEW.
 
 echo Install packages
-pushd %DEPLOYMENT_SOURCE%
-
+pushd "$DEPLOYMENT_SOURCE"
 ls ./apps
+node -v
 npm cache clean -f
-rm -rf node_modules
 npm install
 exitWithMessageOnError "npm failed"
 ls ./node_modules
