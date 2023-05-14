@@ -11,8 +11,8 @@
     "build:cms": "npm workspace cms build",
     "build:ecommerce-app": "npm workspace ecommerce-app build",
     "dev": "turbo run dev",
-    "start:cms": "npm workspace cms start",
-    "start:ecommerce-app": "npm workspace ecommerce-app start",
+    "start:cms": "npm run -w cms start",
+    "start:ecommerce-app": "npm run -w ecommerce-app start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
