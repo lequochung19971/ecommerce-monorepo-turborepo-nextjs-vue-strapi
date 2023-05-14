@@ -10,7 +10,7 @@ on:
     paths:
       - '**'
       - '!apps/docs/**'
-      - '!apps/ecommerce-app/**'
+      - '!apps/storefront/**'
   workflow_dispatch:
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
       - name: remove unrelated repos
         run: |
           rm -r -f ./apps/docs
-          rm -r -f ./apps/ecommerce-app
+          rm -r -f ./apps/storefront
 
       # - name: npm install, build
       #   run: |
@@ -47,7 +47,7 @@ jobs:
           path: |
             .
             !./apps/docs
-            !./apps/ecommerce-app
+            !./apps/storefront
 
   deploy:
     runs-on: ubuntu-latest
