@@ -42,7 +42,7 @@ const images: ReactImageGalleryItem[] = [
 export const Banner: React.FunctionComponent = () => {
   return (
     <Container>
-      <ImageGallery
+      {/* <ImageGallery
         items={images}
         additionalClass="test-hung"
         showPlayButton={false}
@@ -53,7 +53,7 @@ export const Banner: React.FunctionComponent = () => {
         )}
         showThumbnails={false}
         showFullscreenButton={false}
-      />
+      /> */}
     </Container>
   );
 };
