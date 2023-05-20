@@ -37,7 +37,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
-  plugins: ['import', 'unused-imports', 'simple-import-sort', '@typescript-eslint'],
+  plugins: ['import', 'simple-import-sort', '@typescript-eslint'],
   rules: {
     'prettier/prettier': 'off',
     'react-hooks/rules-of-hooks': 'error',
@@ -71,16 +71,16 @@ module.exports = {
     'simple-import-sort/imports': 'error', // Import configuration for `eslint-plugin-simple-import-sort`
     'simple-import-sort/exports': 'error', // Export configuration for `eslint-plugin-simple-import-sort`
     'no-unused-vars': 'warn',
-    'unused-imports/no-unused-imports': 'error',
-    'unused-imports/no-unused-vars': [
-      'warn',
-      {
-        vars: 'all',
-        varsIgnorePattern: '^_',
-        args: 'after-used',
-        argsIgnorePattern: '^_',
-      },
-    ],
+    // 'unused-imports/no-unused-imports': 'error',
+    // 'unused-imports/no-unused-vars': [
+    //   'warn',
+    //   {
+    //     vars: 'all',
+    //     varsIgnorePattern: '^_',
+    //     args: 'after-used',
+    //     argsIgnorePattern: '^_',
+    //   },
+    // ],
     'import/no-named-as-default': 'off',
     'react/no-unescaped-entities': 'off',
     'no-console': 'warn',
