@@ -50,33 +50,38 @@ const generateGetProductsParams = ({ slug, page = 1 }: QueryParams) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async ({}) => {
-  const childCategories = await getCategoriesEndpoint<{ data: Category[] }>({
-    params: {
-      populate: {
-        0: 'childCategories',
-        1: 'childCategories.childCategories',
-      },
-    },
-  });
-  const flattenCategories = childCategories.data.data.reduce((result, category) => {
-    result.push(category);
-    if (category.childCategories?.length) {
-      result.push(...category.childCategories);
-    }
-
-    return result;
-  }, [] as Category[]);
-
-  return {
-    paths: flattenCategories.map((d) => {
-      return {
-        params: {
-          slug: d.slug,
+  try {
+    const childCategories = await getCategoriesEndpoint<{ data: Category[] }>({
+      params: {
+        populate: {
+          0: 'childCategories',
+          1: 'childCategories.childCategories',
         },
-      };
-    }),
-    fallback: false,
-  };
+      },
+    });
+    const flattenCategories = childCategories.data.data.reduce((result, category) => {
+      result.push(category);
+      if (category.childCategories?.length) {
+        result.push(...category.childCategories);
+      }
+
+      return result;
+    }, [] as Category[]);
+
+    return {
+      paths: flattenCategories.map((d) => {
+        return {
+          params: {
+            slug: d.slug,
+          },
+        };
+      }),
+      fallback: false,
+    };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
