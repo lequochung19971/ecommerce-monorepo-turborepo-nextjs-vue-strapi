@@ -51,6 +51,7 @@ const generateGetProductsParams = ({ slug, page = 1 }: QueryParams) => {
 
 export const getStaticPaths: GetStaticPaths = async ({}) => {
   try {
+    console.log('Hung Dep Trai');
     const childCategories = await getCategoriesEndpoint<{ data: Category[] }>({
       params: {
         populate: {
