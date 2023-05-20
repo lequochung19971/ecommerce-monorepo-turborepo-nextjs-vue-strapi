@@ -49,7 +49,7 @@ jobs:
           ls -la
           ls ./apps
           ls ./packages
-          ls -la ./app/storefront
+          cat ./apps/storefront/.env
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
