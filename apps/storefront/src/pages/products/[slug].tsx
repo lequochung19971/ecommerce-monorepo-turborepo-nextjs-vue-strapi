@@ -60,6 +60,8 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
         },
       },
     });
+    console.log('childCategories', childCategories);
+
     const flattenCategories = childCategories.data.data.reduce((result, category) => {
       result.push(category);
       if (category.childCategories?.length) {
@@ -85,13 +87,17 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  console.log('getStaticProps');
+
   const response = await getProductsEndpoint({
     params: generateGetProductsParams({
       slug: params?.slug as string,
     }),
   });
+  console.log('getStaticProps response', response);
 
   const categoryResponse = await getCategoryBySlugEndpoint(params?.slug as string);
+  console.log('getCategoryBySlugEndpoint', categoryResponse);
 
   return {
     props: {
