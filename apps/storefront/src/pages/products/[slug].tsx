@@ -4,6 +4,7 @@ import { Select } from 'chakra-react-select';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import useSWR, { SWRConfig, unstable_serialize } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -13,7 +14,6 @@ import { getProductsEndpoint } from '@/common/http/endpoints/product';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { Category, Product } from '@/modules/products';
 import { ProductCard } from '@/modules/products/components';
-import InfiniteScroll from 'react-infinite-scroll-component';
 type QueryParams = {
   slug: string;
   page?: number;
@@ -79,7 +79,7 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
       fallback: false,
     };
   } catch (error) {
-    console.log(error);
+    console.log('getStaticPaths', error);
     throw error;
   }
 };
