@@ -4,7 +4,7 @@
 
 import { factories } from "@strapi/strapi";
 import { Controller } from "@strapi/strapi/lib/core-api/controller";
-import { AddItemToShoppingSessionRequest } from "../types";
+import { AddItemToShoppingSessionRequest } from "types";
 import { addItemToShoppingSessionRequestValidation } from "../validation";
 
 export default factories.createCoreController(

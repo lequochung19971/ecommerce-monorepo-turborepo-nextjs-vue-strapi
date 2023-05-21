@@ -2,7 +2,7 @@ import { Box, Icon, IconButton, Text, Tooltip } from '@chakra-ui/react';
 import type { AnimationProps } from 'framer-motion';
 import { useAnimation } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import useSWR from 'swr';
 
@@ -27,13 +27,17 @@ const variants: AnimationProps['variants'] = {
 };
 
 export const ShoppingCart: React.FunctionComponent = () => {
-  const { data = 0, isValidating } = useSWR(httpMethods.get(ApiUrl.SHOPPING_SESSION_ITEMS_QUANTITY), httpFetcher());
+  const { data = 0 } = useSWR(httpMethods.get(ApiUrl.SHOPPING_SESSION_ITEMS_QUANTITY), httpFetcher());
   const controls = useAnimation();
+  const numberOfItemsPrevious = useRef(data);
+
   useEffect(() => {
-    if (isValidating) {
+    if (numberOfItemsPrevious.current !== data) {
+      numberOfItemsPrevious.current = data;
       controls.start('start');
     }
-  }, [controls, isValidating]);
+  }, [controls, data]);
+
   return (
     <Tooltip label="Shopping Cart" placement="top">
       <MotionBox

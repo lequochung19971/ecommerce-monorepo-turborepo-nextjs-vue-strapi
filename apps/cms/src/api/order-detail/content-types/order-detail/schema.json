@@ -17,14 +17,24 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
-    "total": {
-      "type": "decimal"
-    },
-    "order_items": {
+    "orderItems": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::order-item.order-item",
-      "mappedBy": "order_detail"
+      "mappedBy": "orderDetail"
+    },
+    "address": {
+      "type": "component",
+      "repeatable": false,
+      "component": "common.address"
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phoneNumber": {
+      "type": "string",
+      "required": true
     }
   }
 }

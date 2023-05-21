@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_address_addresses",
+  "info": {
+    "displayName": "Address",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "city": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "ward": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "address1": {
+      "type": "text"
+    },
+    "address2": {
+      "type": "text"
+    },
+    "postCode": {
+      "type": "string"
+    }
+  }
+}

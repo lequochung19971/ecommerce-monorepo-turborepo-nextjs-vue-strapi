@@ -13,4 +13,5 @@ export enum ApiUrl {
   SHOPPING_SESSION_CART = '/api/shopping-session/cart',
   SHOPPING_SESSION_ITEMS_QUANTITY = '/api/shopping-session/items-quantity',
   CART_ITEMS = '/api/cart-items',
+  ORDER_DETAILS = '/api/order-details',
 }

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "order-item",
     "pluralName": "order-items",
-    "displayName": "OrderItem"
+    "displayName": "OrderItem",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -14,11 +15,16 @@
     "quantity": {
       "type": "integer"
     },
-    "order_detail": {
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product"
+    },
+    "orderDetail": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::order-detail.order-detail",
-      "inversedBy": "order_items"
+      "inversedBy": "orderItems"
     }
   }
 }

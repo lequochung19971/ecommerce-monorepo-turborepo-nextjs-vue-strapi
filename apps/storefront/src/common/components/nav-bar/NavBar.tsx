@@ -85,7 +85,6 @@ export const NavBar: React.FunctionComponent = () => {
   const { isOpen, onToggle } = useDisclosure();
   const session = useSession();
   const router = useRouter();
-
   return (
     <Box className="app-navbar" position="fixed" top="0" w="full" zIndex="9999">
       <Flex

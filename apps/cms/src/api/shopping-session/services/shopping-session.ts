@@ -4,14 +4,14 @@
 
 import { factories } from "@strapi/strapi";
 
-type addItemToShoppingSessionArgs = {
+type AddItemToShoppingSessionArgs = {
   user: any;
   product: any;
 };
 export default factories.createCoreService(
   "api::shopping-session.shopping-session",
   ({ strapi }) => ({
-    async addItemToShoppingSession(args: addItemToShoppingSessionArgs) {
+    async addItemToShoppingSession(args: AddItemToShoppingSessionArgs) {
       let { product, user } = args;
       try {
         let shoppingSession = await strapi.db
@@ -36,8 +36,7 @@ export default factories.createCoreService(
                       user,
                     },
                   },
-                  null,
-                  transacting
+                  { transacting }
                 );
               await strapi.query("api::cart-item.cart-item").create(
                 {
@@ -47,8 +46,7 @@ export default factories.createCoreService(
                     quantity: 1,
                   },
                 },
-                null,
-                transacting
+                { transacting }
               );
             } else {
               let cartItem = await strapi.db
@@ -74,8 +72,8 @@ export default factories.createCoreService(
                         quantity: cartItem.quantity + 1,
                       },
                     },
-                    null,
-                    transacting
+
+                    { transacting }
                   );
               } else {
                 cartItem = await strapi
@@ -88,8 +86,8 @@ export default factories.createCoreService(
                         quantity: 1,
                       },
                     },
-                    null,
-                    transacting
+
+                    { transacting }
                   );
               }
             }
