@@ -14,4 +14,6 @@ export enum ApiUrl {
   SHOPPING_SESSION_ITEMS_QUANTITY = '/api/shopping-session/items-quantity',
   CART_ITEMS = '/api/cart-items',
   ORDER_DETAILS = '/api/order-details',
+  ORDER_DETAILS_PAYPAL_ORDER_CREATION = '/api/order-details/paypal-order-creation',
+  ORDER_DETAILS_PAYPAL_ORDER_CAPTURE = '/api/order-details/paypal-order-capture',
 }

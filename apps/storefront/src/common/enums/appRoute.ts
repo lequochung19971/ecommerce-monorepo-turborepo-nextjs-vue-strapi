@@ -8,4 +8,5 @@ export enum AppRoute {
   CHECKOUT_SHOPPING_CART = '/checkout/shopping-cart',
   CHECKOUT_PAYMENT = '/checkout/payment',
   PRODUCTS = '/products',
+  COLLECTIONS = '/collections',
 }

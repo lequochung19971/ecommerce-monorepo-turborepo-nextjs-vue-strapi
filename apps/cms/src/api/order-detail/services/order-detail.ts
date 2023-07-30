@@ -3,13 +3,17 @@
  */
 
 import { factories } from "@strapi/strapi";
-import { Address } from "types";
+import { PaymentProvider, PaymentStatus, PaymentType } from "types";
 
 export type CreateOrderDetailArgs = {
   phoneNumber: string;
   email: string;
   items: any[];
   user: object;
+  payment: {
+    provider?: PaymentProvider;
+    type: PaymentType;
+  };
 };
 
 export default factories.createCoreService(
@@ -20,6 +24,7 @@ export default factories.createCoreService(
       email,
       phoneNumber,
       user,
+      payment,
     }: CreateOrderDetailArgs) {
       return await strapi.db.transaction(async (transacting) => {
         try {
@@ -54,7 +59,17 @@ export default factories.createCoreService(
             return await Promise.all(deleteCartItemsPromises);
           };
 
+          const createPaymentDetail = async () => {
+            return strapi.query("api::payment-detail.payment-detail").create({
+              data: {
+                ...payment,
+                status: PaymentStatus.PENDING,
+              },
+            });
+          };
           const orderItems = await createOrderItems();
+          const paymentDetail = await createPaymentDetail();
+
           await removeCartItems();
 
           const orderDetail = await strapi
@@ -66,6 +81,7 @@ export default factories.createCoreService(
                   orderItems,
                   phoneNumber,
                   user,
+                  paymentDetail,
                 },
               },
               { transacting }

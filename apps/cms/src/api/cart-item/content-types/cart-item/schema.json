@@ -17,14 +17,14 @@
       "relation": "oneToOne",
       "target": "api::product.product"
     },
-    "shopping_session": {
+    "quantity": {
+      "type": "integer"
+    },
+    "shoppingSession": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::shopping-session.shopping-session",
-      "inversedBy": "cart_items"
-    },
-    "quantity": {
-      "type": "integer"
+      "inversedBy": "cartItems"
     }
   }
 }

@@ -1,12 +1,14 @@
 import type { ImageProps } from '@chakra-ui/react';
 import { Box, Flex, Icon, Image, Tooltip, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { MdAddShoppingCart } from 'react-icons/md';
 import useSWR from 'swr';
 
 import { MotionBox, MotionCard } from '@/common/components';
+import { AppRoute } from '@/common/enums';
 import { useUser } from '@/common/hooks';
 import { ApiUrl, httpMethods } from '@/common/http';
 import { addProductToShoppingCartEndpoint } from '@/common/http/endpoints/shopping-session';
@@ -62,6 +64,7 @@ const MotionImage = motion<Omit<ImageProps, 'transition'>>(Image);
 
 export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) => {
   const { data } = props;
+  const router = useRouter();
   const { isHover, ...hoverActions } = useHover();
   const currentUser = useUser();
   const amountOfMedias = data.media?.length ?? 0;
@@ -79,18 +82,24 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
     });
   };
 
+  const openProductDetail = () => {
+    router.push(`${AppRoute.PRODUCTS}/${data.id}`);
+  };
+
   const renderImage = () => {
     if (amountOfMedias > 1) {
       return (
         <>
           {isHover ? (
             <MotionImage
+              onClick={openProductDetail}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
                 duration: 0.5,
               }}
+              cursor="pointer"
               objectFit="contain"
               width="full"
               height="full"
@@ -100,12 +109,14 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
             />
           ) : (
             <MotionImage
+              onClick={openProductDetail}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
                 duration: 0.5,
               }}
+              cursor="pointer"
               objectFit="contain"
               width="full"
               height="full"
@@ -120,12 +131,14 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
 
     return (
       <MotionImage
+        onClick={openProductDetail}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{
           duration: 0.5,
         }}
+        cursor="pointer"
         objectFit="contain"
         width="full"
         height="full"
@@ -202,7 +215,14 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
 
         <Flex mt="1" justifyContent="space-between" alignContent="center">
           <Tooltip label={data.name} placement={'top'}>
-            <Box fontSize="xl" fontWeight="semibold" lineHeight="tight" isTruncated>
+            <Box
+              fontSize="xl"
+              cursor="pointer"
+              onClick={openProductDetail}
+              fontWeight="semibold"
+              lineHeight="tight"
+              isTruncated
+            >
               {data.name}
             </Box>
           </Tooltip>
@@ -210,7 +230,7 @@ export const ProductCard: React.FunctionComponent<ProductCardProps> = (props) =>
 
         <Flex justifyContent="space-between" alignContent="center">
           {/* <Rating rating={4} numReviews={10} /> */}
-          <PriceTag currency="VND" price={+data.price} />
+          <PriceTag currency="USD" price={+data.price} />
           {/* <Box fontSize="xl" color={useColorModeValue('gray.800', 'white')}>
             {+data.price.toLocaleString()}
             <Box as="span" color={'gray.600'} fontSize="lg">

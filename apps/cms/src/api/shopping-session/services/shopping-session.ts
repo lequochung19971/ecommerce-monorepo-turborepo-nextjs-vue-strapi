@@ -41,7 +41,7 @@ export default factories.createCoreService(
               await strapi.query("api::cart-item.cart-item").create(
                 {
                   data: {
-                    shopping_session: shoppingSession,
+                    shoppingSession,
                     product,
                     quantity: 1,
                   },
@@ -56,7 +56,7 @@ export default factories.createCoreService(
                     product: {
                       id: product.id,
                     },
-                    shopping_session: {
+                    shoppingSession: {
                       id: shoppingSession?.id,
                     },
                   },
@@ -81,7 +81,7 @@ export default factories.createCoreService(
                   .create(
                     {
                       data: {
-                        shopping_session: shoppingSession,
+                        shoppingSession,
                         product,
                         quantity: 1,
                       },

@@ -6,7 +6,9 @@
     "NEXTAUTH_SECRET",
     "NEXT_PUBLIC_API_URL",
     "GOOGLE_CLIENT_ID",
-    "GOOGLE_CLIENT_SECRET"
+    "GOOGLE_CLIENT_SECRET",
+    "PAYPAL_CLIENT_ID",
+    "PAYPAL_SECRET"
   ],
   "pipeline": {
     "build": {

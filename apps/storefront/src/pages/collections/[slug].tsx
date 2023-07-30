@@ -49,9 +49,8 @@ const generateGetProductsParams = ({ slug, page = 1 }: QueryParams) => {
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async ({}) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    console.log('Hung Dep Trai');
     const childCategories = await getCategoriesEndpoint<{ data: Category[] }>({
       params: {
         populate: {
@@ -60,7 +59,6 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
         },
       },
     });
-    console.log('childCategories', childCategories);
 
     const flattenCategories = childCategories.data.data.reduce((result, category) => {
       result.push(category);
@@ -87,17 +85,13 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  console.log('getStaticProps');
-
   const response = await getProductsEndpoint({
     params: generateGetProductsParams({
       slug: params?.slug as string,
     }),
   });
-  console.log('getStaticProps response', response);
 
   const categoryResponse = await getCategoryBySlugEndpoint(params?.slug as string);
-  console.log('getCategoryBySlugEndpoint', categoryResponse);
 
   return {
     props: {
@@ -202,7 +196,7 @@ const ProductsCategory: NextPage<ProductsCategoryPageProps> = ({ params, categor
   const currentCategory = categoryDataSource.find((c) => c.id === category?.id);
 
   const handleCategoryOnChange = (newValue: SingleValue<Category>) => {
-    router.push(`${AppRoute.PRODUCTS}/${newValue?.slug}`);
+    router.push(`${AppRoute.COLLECTIONS}/${newValue?.slug}`);
   };
 
   const renderLoader = () => {

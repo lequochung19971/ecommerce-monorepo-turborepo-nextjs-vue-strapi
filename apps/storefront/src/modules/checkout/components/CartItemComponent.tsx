@@ -38,7 +38,7 @@ const QuantityInput: React.FunctionComponent<NumberInputProps> = (props) => {
 };
 
 export const CartItemComponent = (props: CartItemComponentProps) => {
-  const { id, quantity, currency = 'VND', onChangeQuantity, onClickDelete, mode = 'edit', product } = props;
+  const { id, quantity, currency = 'USD', onChangeQuantity, onClickDelete, mode = 'edit', product } = props;
   return (
     <MotionFlex
       initial={{ opacity: 0 }}

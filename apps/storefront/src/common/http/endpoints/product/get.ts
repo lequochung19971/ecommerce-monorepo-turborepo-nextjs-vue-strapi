@@ -12,3 +12,11 @@ export async function getProductsEndpoint<
 >(config: AxiosRequestConfig) {
   return httpClient.get<T>(ApiUrl.PRODUCTS, config);
 }
+
+export async function getProductEndpoint<
+  T = {
+    data: Product[];
+  },
+>(id: string, config: AxiosRequestConfig) {
+  return httpClient.get<T>(`${ApiUrl.PRODUCTS}/${id}`, config);
+}

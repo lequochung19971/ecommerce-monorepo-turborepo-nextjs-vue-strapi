@@ -20,6 +20,8 @@ import {
   Text,
   useColorModeValue as colorMode,
 } from '@chakra-ui/react';
+import type { OnApproveData } from '@paypal/paypal-js/types/components/buttons';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -28,16 +30,20 @@ import { useMemo } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import useSWR, { useSWRConfig } from 'swr';
 import type { CreateOrderDetailRequest } from 'types';
+import { PaymentProvider, PaymentType } from 'types';
 
 import masterIcon from '@/common/assets/mastercard.svg';
 import visaIcon from '@/common/assets/visa.svg';
 import SelectController from '@/common/components/controllers/SelectController';
 import { AppRoute } from '@/common/enums';
 import { useAppToast } from '@/common/hooks';
-import { ApiUrl, httpClient, httpMethods } from '@/common/http';
-import { postOrderDetailEndpoint } from '@/common/http/endpoints/cart-detail/post';
+import { ApiUrl, httpMethods } from '@/common/http';
+import {
+  capturePaypalOrderEndpoint,
+  postOrderDetailEndpoint,
+  postPaypalOrderEndpoint,
+} from '@/common/http/endpoints/order-detail/post';
 import { httpFetcher } from '@/common/http/httpFetcher';
-import httpStatusMessage from '@/common/json/httpStatusMessage.json';
 import type { QueryResponse } from '@/common/types';
 import type { CityModel } from '@/common/types/cityModel';
 import type { DistrictModel } from '@/common/types/districtModel';
@@ -45,7 +51,6 @@ import type { WardModel } from '@/common/types/wardModel';
 import { formatPrice } from '@/common/utilts/formatPrice';
 import { getCities, getDistricts, getWards } from '@/common/utilts/vietnamAddress';
 import type { CartItem } from '@/modules/checkout';
-import { PaymentMethod } from '@/modules/checkout';
 import { CartItemComponent, OrderSummaryItem } from '@/modules/checkout/components';
 
 const cities = getCities().map((c) => ({
@@ -72,6 +77,11 @@ const countries = [
     label: 'Vietnam',
   },
 ];
+const initialOptions = {
+  clientId: 'AeQ_xaP7coo6Up4MbePSE9eNWDLjY7JVKFe9CGCk6eLy0rWoVU1qDzBASwPWQGHukIfH9J1cXDIM2Vcr',
+  currency: 'USD',
+  intent: 'capture',
+};
 
 type OrderDetailHookForm = {
   fullName: string;
@@ -82,10 +92,11 @@ type OrderDetailHookForm = {
   ward: WardModel | null;
   address1: string;
   country: string;
-  paymentMethod: PaymentMethod;
+  paymentType: PaymentType;
 };
 
 const PaymentPage: NextPage = () => {
+  const orderDetailRef = React.useRef({} as any);
   const toast = useAppToast();
   const router = useRouter();
   const hookForm = useForm<OrderDetailHookForm>({
@@ -99,7 +110,7 @@ const PaymentPage: NextPage = () => {
       ward: null as WardModel | null,
       address1: '',
       country: '84',
-      paymentMethod: PaymentMethod.PAY_IN_CASH,
+      paymentType: PaymentType.CASH,
     },
   });
   const { register, control, setValue, handleSubmit, getValues } = hookForm;
@@ -107,6 +118,8 @@ const PaymentPage: NextPage = () => {
 
   const city = useWatch({ control, name: 'city' });
   const district = useWatch({ control, name: 'district' });
+  const paymentType = useWatch({ control, name: 'paymentType' });
+  console.log(paymentType);
 
   const cityOptions = cities;
   const districtOptions = useMemo(() => districts.filter((d) => d.parentId === city?.id), [city?.id]);
@@ -123,7 +136,8 @@ const PaymentPage: NextPage = () => {
   );
 
   const cartItems = response?.data ?? [];
-  const totalOfCartItem = cartItems.reduce((total, cart) => {
+
+  const totalCost = cartItems.reduce((total, cart) => {
     total = total + +cart.product.price * cart.quantity;
     return total;
   }, 0);
@@ -141,9 +155,76 @@ const PaymentPage: NextPage = () => {
       email: values.email,
       itemIds: cartItems.map((item) => item.id),
       phoneNumber: values.phoneNumber,
+      payment: {
+        type: PaymentType.CASH,
+        provider: undefined,
+      },
     };
     try {
       await postOrderDetailEndpoint(request);
+      toast({
+        status: 'success',
+        title: 'Success',
+        description: 'Create order successful',
+      });
+      mutate(httpMethods.get(ApiUrl.SHOPPING_SESSION_ITEMS_QUANTITY));
+      mutate(
+        httpMethods.get(ApiUrl.CART_ITEMS, {
+          params: {
+            populate: ['product.media'],
+            sort: ['createdAt'],
+          },
+        }),
+      );
+      router.push(AppRoute.CHECKOUT_SHOPPING_CART);
+    } catch (error) {
+      toast({
+        status: 'error',
+        title: 'Error',
+        description: 'Create order error',
+      });
+    }
+  };
+
+  const createPaypalOrder = async () => {
+    try {
+      const paypalOrder = await postPaypalOrderEndpoint({ cartItemIds: cartItems.map((c) => c.id) });
+      return paypalOrder.data.id;
+    } catch (error) {
+      toast({
+        status: 'error',
+        title: 'Error',
+        description: 'Create order error',
+      });
+      throw error;
+    }
+  };
+
+  const onPaypalApprove = async (data: OnApproveData) => {
+    try {
+      const values = getValues();
+      const request: CreateOrderDetailRequest = {
+        address: {
+          address1: values.address1,
+          city: values.city?.id ?? '',
+          country: values.country ?? '84',
+          district: values.district?.id ?? '',
+          ward: values.ward?.id ?? '',
+        },
+        email: values.email,
+        itemIds: cartItems.map((item) => item.id),
+        phoneNumber: values.phoneNumber,
+        payment: {
+          type: PaymentType.PAYPAL_BALANCE,
+          provider: PaymentProvider.PAYPAL,
+        },
+      };
+      const postOrderDetailResponse = await postOrderDetailEndpoint(request);
+      await capturePaypalOrderEndpoint({
+        paypalOrderId: data.orderID,
+        orderDetailId: postOrderDetailResponse.data.id,
+      });
+      orderDetailRef.current = null;
       toast({
         status: 'success',
         title: 'Success',
@@ -286,11 +367,11 @@ const PaymentPage: NextPage = () => {
                   </Heading>
                   <Controller
                     control={control}
-                    name="paymentMethod"
+                    name="paymentType"
                     render={({ field }) => (
                       <RadioGroup {...field}>
                         <Stack direction="row">
-                          <Radio flex="1" value="payInCash" size="lg">
+                          <Radio flex="1" value="cash" size="lg">
                             <Stack spacing="0">
                               <Box as="span" fontSize="lg" fontWeight="semibold">
                                 Pay in cash
@@ -300,10 +381,10 @@ const PaymentPage: NextPage = () => {
                               </Box>
                             </Stack>
                           </Radio>
-                          <Radio flex="1" value="creditCard" size="lg">
+                          <Radio flex="1" value="paypalBalance" size="lg">
                             <Stack spacing="0">
                               <Box as="span" fontSize="lg" fontWeight="semibold">
-                                Credit Card
+                                Paypal
                               </Box>
                               <Box as="span" color={colorMode('gray.600', 'gray.400')}>
                                 Pay with credit card
@@ -322,7 +403,7 @@ const PaymentPage: NextPage = () => {
               </Card>
             </Stack>
 
-            <Stack minW="350px" position={{ base: 'static', xl: 'sticky' }} top="90px">
+            <Stack minW="600px" position={{ base: 'static', xl: 'sticky' }} top="90px">
               <Card background="white" padding="5">
                 <Stack direction="column" flex="1" spacing="4">
                   <Heading size="md">Order Summary</Heading>
@@ -352,7 +433,7 @@ const PaymentPage: NextPage = () => {
                     </AccordionItem>
                   </Accordion>
                   <Divider />
-                  <OrderSummaryItem label="Subtotal" value={formatPrice(totalOfCartItem)} />
+                  <OrderSummaryItem label="Subtotal" value={formatPrice(totalCost)} />
                   <OrderSummaryItem label="Shipping + Tax">
                     <Link href="#" textDecor="underline">
                       Calculate shipping
@@ -368,12 +449,29 @@ const PaymentPage: NextPage = () => {
                       Total
                     </Text>
                     <Text fontSize="xl" fontWeight="extrabold">
-                      {formatPrice(totalOfCartItem)}
+                      {formatPrice(totalCost)}
                     </Text>
                   </Flex>
-                  <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
-                    Place order
-                  </Button>
+                  {(() => {
+                    switch (paymentType) {
+                      case PaymentType.CASH: {
+                        return (
+                          <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
+                            Place order
+                          </Button>
+                        );
+                      }
+                      case PaymentType.PAYPAL_BALANCE: {
+                        return (
+                          <PayPalScriptProvider options={initialOptions}>
+                            <PayPalButtons createOrder={createPaypalOrder} onApprove={onPaypalApprove} />
+                          </PayPalScriptProvider>
+                        );
+                      }
+                      default:
+                        break;
+                    }
+                  })()}
                 </Stack>
               </Card>
             </Stack>

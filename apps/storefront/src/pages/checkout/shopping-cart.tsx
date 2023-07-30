@@ -120,7 +120,7 @@ const ShoppingCartPage: NextPage = () => {
                   <CartItemComponent
                     key={item.id}
                     {...item}
-                    currency="VND"
+                    currency="USD"
                     onChangeQuantity={handleOnChangeQuantity}
                     onClickDelete={handleOnDelete}
                   />
@@ -136,7 +136,7 @@ const ShoppingCartPage: NextPage = () => {
               <CartOrderSummary subTotal={totalOfCartItem} total={totalOfCartItem} />
               <HStack mt="6" fontWeight="semibold">
                 <p>or</p>
-                <Link href={AppRoute.PRODUCTS} color={mode('blue.500', 'blue.200')}>
+                <Link href={AppRoute.COLLECTIONS} color={mode('blue.500', 'blue.200')}>
                   Continue shopping
                 </Link>
               </HStack>

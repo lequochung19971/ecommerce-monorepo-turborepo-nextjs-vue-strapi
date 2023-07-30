@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "payment_details",
+  "info": {
+    "singularName": "payment-detail",
+    "pluralName": "payment-details",
+    "displayName": "PaymentDetail",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "provider": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "paypal",
+        "stripe"
+      ],
+      "default": "none"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "cancel",
+        "paid"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "cash",
+        "paypalBalance",
+        "debit",
+        "credit"
+      ]
+    },
+    "orderDetail": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::order-detail.order-detail",
+      "mappedBy": "paymentDetail"
+    },
+    "extraInfo": {
+      "type": "json"
+    }
+  }
+}

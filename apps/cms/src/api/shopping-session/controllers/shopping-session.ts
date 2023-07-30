@@ -4,7 +4,7 @@
 
 import { factories } from "@strapi/strapi";
 import { Controller } from "@strapi/strapi/lib/core-api/controller";
-import { AddItemToShoppingSessionRequest } from "types";
+// import { AddItemToShoppingSessionRequest } from "types";
 import { addItemToShoppingSessionRequestValidation } from "../validation";
 
 export default factories.createCoreController(
@@ -14,8 +14,7 @@ export default factories.createCoreController(
       try {
         const that = this as Controller;
         const { user } = ctx.state;
-        const { productId } = ctx.request
-          .body as AddItemToShoppingSessionRequest;
+        const { productId } = ctx.request.body as any;
 
         const validationResult =
           addItemToShoppingSessionRequestValidation.validate({
@@ -64,7 +63,7 @@ export default factories.createCoreController(
           .query("api::cart-item.cart-item")
           .findMany({
             where: {
-              shopping_session: {
+              shoppingSession: {
                 user: {
                   id: user.id,
                 },

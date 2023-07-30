@@ -39,7 +39,7 @@ function generateProductNavItemsFromCategories(categories: Category[]): NavItem[
   return categories.map((category) => {
     return {
       label: category.name,
-      href: `${AppRoute.PRODUCTS}/${category.slug}`,
+      href: `${AppRoute.COLLECTIONS}/${category.slug}`,
       children: generateProductNavItemsFromCategories(category.childCategories ?? []),
     } as NavItem;
   });
@@ -68,7 +68,7 @@ export const NavBar: React.FunctionComponent = () => {
       },
       {
         label: 'Products',
-        href: AppRoute.PRODUCTS,
+        href: AppRoute.COLLECTIONS,
         children: generateProductNavItemsFromCategories(data?.data ?? []),
       },
       {

@@ -6,5 +6,5 @@ import type { ShoppingSession } from './shoppingSession';
 export type CartItem = BaseModel & {
   quantity: number;
   product: Product;
-  shopping_session: ShoppingSession;
+  shoppingSession: ShoppingSession;
 };
