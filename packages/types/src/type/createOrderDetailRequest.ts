@@ -1,6 +1,6 @@
+import { PaymentType } from '../enum';
+import { PaymentProvider } from '../enum/paymentProvider';
 import { Address } from './address';
-import { PaymentProvider } from './paymentProvider';
-import { PaymentType } from './paymentType';
 
 export type CreateOrderDetailRequest = {
   phoneNumber: string;
