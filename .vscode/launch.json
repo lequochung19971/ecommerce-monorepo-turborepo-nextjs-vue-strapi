@@ -1,52 +1,44 @@
 {
   "version": "0.2.0",
+  "resolveSourceMapLocations": [
+    "${workspaceFolder}/**",
+    "!**/node_modules/**"
+  ],
   "configurations": [
     {
-      "type": "node-terminal",
+      "name": "Storefront",
+      "type": "node",
       "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "-w",
+        "storefront",
+      ],
+      "outputCapture": "std",
+      "internalConsoleOptions": "openOnSessionStart",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/apps/storefront/"
+    },
+    {
       "name": "CMS",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "command": "yarn dev --filter=cms",
-      "outFiles": [
-        "${workspaceFolder}/apps/cms/**/*.js",
-        "!**/node_modules/**"
-      ]
-    },
-    {
-      "name": "Next.js: debug server-side",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "yarn dev --filter=storefront"
-    },
-    {
-      "name": "Next.js: debug client-side",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:3000"
-    },
-    {
-      "name": "Next.js: debug full stack",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "yarn dev --filter=storefront",
-      "serverReadyAction": {
-        "pattern": "started server on .+, url: (https?://.+)",
-        "uriFormat": "%s",
-        "action": "debugWithChrome"
-      }
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "-w",
+        "cms",
+      ],
+      "outputCapture": "std",
+      "internalConsoleOptions": "openOnSessionStart",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/apps/cms/"
     },
   ],
-  "compounds": [
-    {
-      "name": "CMS/storefront",
-      "configurations": [
-        "CMS",
-        "Next.js: debug full stack"
-      ],
-      "preLaunchTask": "${defaultBuildTask}",
-      "stopAll": true
-    }
-  ]
 }
