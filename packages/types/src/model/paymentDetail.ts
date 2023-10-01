@@ -5,9 +5,9 @@ import { BaseModel } from './baseModel';
 import { OrderDetail } from './orderDetail';
 
 export type PaymentDetail = BaseModel & {
-  provider: PaymentProvider;
+  provider?: PaymentProvider;
   status: PaymentStatus;
   type: PaymentType;
-  orderDetail: OrderDetail;
+  orderDetail?: OrderDetail;
   extraInfo?: string;
 };

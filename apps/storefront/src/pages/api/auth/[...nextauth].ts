@@ -3,8 +3,9 @@ import type { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import { ApiUrl } from 'types';
 
-import { ApiUrl, httpClient } from '@/common/http';
+import { httpClient } from '@/common/http';
 import type { UserLoginResponse } from '@/modules/auth';
 import { AuthProvider } from '@/modules/auth/enums';
 

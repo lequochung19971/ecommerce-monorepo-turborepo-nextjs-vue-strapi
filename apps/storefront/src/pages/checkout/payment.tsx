@@ -30,14 +30,14 @@ import { useMemo } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import useSWR, { useSWRConfig } from 'swr';
 import type { CreateOrderDetailRequest } from 'types';
-import { PaymentProvider, PaymentType } from 'types';
+import { ApiUrl, PaymentProvider, PaymentType } from 'types';
 
 import masterIcon from '@/common/assets/mastercard.svg';
 import visaIcon from '@/common/assets/visa.svg';
 import SelectController from '@/common/components/controllers/SelectController';
 import { AppRoute } from '@/common/enums';
 import { useAppToast } from '@/common/hooks';
-import { ApiUrl, httpMethods } from '@/common/http';
+import { httpMethods } from '@/common/http';
 import {
   capturePaypalOrderEndpoint,
   postOrderDetailEndpoint,

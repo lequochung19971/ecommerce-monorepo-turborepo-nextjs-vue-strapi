@@ -6,11 +6,12 @@ import { useMemo, useState } from 'react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { MdAddShoppingCart } from 'react-icons/md';
 import useSWR from 'swr';
+import { ApiUrl } from 'types';
 
 import { MotionBox, MotionCard } from '@/common/components';
 import { AppRoute } from '@/common/enums';
 import { useUser } from '@/common/hooks';
-import { ApiUrl, httpMethods } from '@/common/http';
+import { httpMethods } from '@/common/http';
 import { addProductToShoppingCartEndpoint } from '@/common/http/endpoints/shopping-session';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import { PriceTag } from '@/modules/checkout';

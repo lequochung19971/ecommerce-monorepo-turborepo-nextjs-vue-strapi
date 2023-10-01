@@ -41,6 +41,18 @@
       "relation": "oneToOne",
       "target": "api::payment-detail.payment-detail",
       "inversedBy": "orderDetail"
+    },
+    "orderStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "pending",
+      "required": false
     }
   }
 }

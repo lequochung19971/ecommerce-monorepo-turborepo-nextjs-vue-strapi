@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .border-default {
+    @apply border border-solid border-[#dee2e6]
+  }
+
+  .border-default-l {
+    @apply border-l border-solid border-[#dee2e6]
+  }
+
+  .border-default-r {
+    @apply border-r border-solid border-[#dee2e6]
+  }
+
+  .border-default-t {
+    @apply border-t border-solid border-[#dee2e6]
+  }
+
+  .border-default-b {
+    @apply border-b border-solid border-[#dee2e6]
+  }
+}

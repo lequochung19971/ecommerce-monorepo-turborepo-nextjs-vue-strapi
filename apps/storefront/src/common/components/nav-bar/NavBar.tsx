@@ -22,9 +22,10 @@ import { signOut, useSession } from 'next-auth/react';
 import { useMemo } from 'react';
 import { FaBoxOpen, FaSignOutAlt, FaUserAlt } from 'react-icons/fa';
 import useSWR from 'swr';
+import { ApiUrl } from 'types';
 
 import { AppRoute } from '@/common/enums';
-import { ApiUrl, httpMethods } from '@/common/http';
+import { httpMethods } from '@/common/http';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { NavItem } from '@/common/types';
 import type { Category } from '@/modules/products/types';

@@ -5,9 +5,10 @@ import { set } from 'lodash';
 import type { NextPage } from 'next';
 import * as React from 'react';
 import useSWR from 'swr';
+import { ApiUrl } from 'types';
 
 import { AppRoute } from '@/common/enums';
-import { ApiUrl, httpMethods } from '@/common/http';
+import { httpMethods } from '@/common/http';
 import { deleteCartItemEndpoint, putCartItemEndpoint } from '@/common/http/endpoints/cart-item';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { QueryResponse } from '@/common/types';

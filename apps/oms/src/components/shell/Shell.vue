@@ -4,6 +4,8 @@ import Toast from 'primevue/toast'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { AppRoute } from '@/router'
+import type OverlayPanel from 'primevue/overlaypanel'
+import useAuth from '@/composables/useAuth'
 
 type BreadCrumbType = MenuItem & {
   route?: AppRoute
@@ -51,10 +53,23 @@ const navigationItems = ref<NavigationItem[]>([
     ]
   }
 ])
+const { logout } = useAuth()
+const userMenuItems = ref<MenuItem[]>([
+  {
+    label: 'Sign Out',
+    icon: 'pi pi-fw pi-power-off',
+    command: () => {
+      logout()
+    }
+  }
+])
+
 const home = ref({
   icon: 'pi pi-home',
   route: '/'
 })
+const overlayPanelElement = ref<OverlayPanel>()
+
 const route = useRoute()
 const currentBreadcrumb = computed(() => {
   const currentRouteMatched = route.matched[route.matched.length - 1]
@@ -83,7 +98,7 @@ const currentBreadcrumb = computed(() => {
 <template>
   <div class="shell">
     <Toast />
-    <div class="shell__side-bar">
+    <div class="shell__side-bar border-default-r">
       <div class="shell__logo">
         <span>LOGO</span>
       </div>
@@ -131,6 +146,29 @@ const currentBreadcrumb = computed(() => {
             </template>
           </Breadcrumb>
         </div>
+        <div>
+          <Avatar
+            label="H"
+            size="large"
+            shape="circle"
+            class="cursor-pointer"
+            @click="
+              (e: Event) => {
+                overlayPanelElement?.toggle(e)
+              }
+            "
+          />
+          <OverlayPanel ref="overlayPanelElement" class="overlay-panel-menu">
+            <Menu
+              @click="console.log"
+              :model="userMenuItems"
+              :pt="{
+                root: '!border-[0px] !w-full'
+              }"
+            >
+            </Menu>
+          </OverlayPanel>
+        </div>
       </div>
       <div class="shell__main">
         <RouterView />
@@ -159,11 +197,18 @@ const currentBreadcrumb = computed(() => {
   }
 
   &__top-bar {
-    @apply min-h-[80px];
+    @apply flex justify-between items-center mb-6;
   }
 
   &__main {
     @apply flex-1;
   }
+}
+:global(.overlay-panel-menu .p-overlaypanel-content) {
+  padding: 0;
+}
+:global(.p-overlaypanel:after),
+:global(.p-overlaypanel:before) {
+  display: none;
 }
 </style>

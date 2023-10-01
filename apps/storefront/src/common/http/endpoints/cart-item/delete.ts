@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from 'axios';
+import { ApiUrl } from 'types';
 
-import { ApiUrl } from '../../apiUrl';
 import { httpClient } from '../../httpClient';
 
 export async function deleteCartItemEndpoint<T = unknown>(id: string | number, config = {} as AxiosRequestConfig) {

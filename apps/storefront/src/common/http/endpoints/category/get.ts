@@ -1,8 +1,8 @@
 import type { AxiosRequestConfig } from 'axios';
+import { ApiUrl } from 'types';
 
 import type { Category } from '@/modules/products';
 
-import { ApiUrl } from '../../apiUrl';
 import { httpClient } from '../../httpClient';
 
 export async function getCategoryBySlugEndpoint<T = Category>(slug: string, config?: AxiosRequestConfig) {

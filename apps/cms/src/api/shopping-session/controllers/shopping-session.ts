@@ -24,7 +24,7 @@ export default factories.createCoreController(
         if (validationResult.error) {
           return ctx.badRequest(
             validationResult.error.message,
-            validationResult.error.details
+            validationResult.error.details,
           );
         }
 
@@ -65,7 +65,7 @@ export default factories.createCoreController(
             where: {
               shoppingSession: {
                 user: {
-                  id: user.id,
+                  id: user?.id,
                 },
               },
             },
@@ -79,5 +79,5 @@ export default factories.createCoreController(
         throw error;
       }
     },
-  })
+  }),
 );

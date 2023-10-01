@@ -6,6 +6,8 @@ export enum ApiUrl {
   AUTH_GOOGLE_CALLBACK = '/api/auth/google/callback',
   AUTH_GITHUB_CALLBACK = '/api/auth/github/callback',
 
+  USER_ME = '/user/me',
+
   PRODUCTS = '/api/products',
   CATEGORIES = '/api/categories',
   CATEGORIES_SLUG = '/api/categories/slug',

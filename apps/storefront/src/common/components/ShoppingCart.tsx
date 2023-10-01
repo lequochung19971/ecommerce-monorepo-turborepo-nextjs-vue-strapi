@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import useSWR from 'swr';
+import { ApiUrl } from 'types';
 
 import { AppRoute } from '../enums';
-import { ApiUrl, httpMethods } from '../http';
+import { httpMethods } from '../http';
 import { httpFetcher } from '../http/httpFetcher';
 import { MotionBox } from './chakra-motion/MotionBox';
 

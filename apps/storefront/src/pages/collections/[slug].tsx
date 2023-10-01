@@ -7,9 +7,10 @@ import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useSWR, { SWRConfig, unstable_serialize } from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import { ApiUrl } from 'types';
 
 import { AppRoute } from '@/common/enums';
-import { ApiUrl, getCategoriesEndpoint, getCategoryBySlugEndpoint, httpMethods } from '@/common/http';
+import { getCategoriesEndpoint, getCategoryBySlugEndpoint, httpMethods } from '@/common/http';
 import { getProductsEndpoint } from '@/common/http/endpoints/product';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { Category, Product } from '@/modules/products';

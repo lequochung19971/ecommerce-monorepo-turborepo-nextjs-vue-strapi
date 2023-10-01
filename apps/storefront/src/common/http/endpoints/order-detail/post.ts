@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from 'axios';
 import type { CreateOrderDetailRequest } from 'types';
+import { ApiUrl } from 'types';
 
-import { ApiUrl } from '../../apiUrl';
 import { httpClient } from '../../httpClient';
 
 export async function postOrderDetailEndpoint(data: CreateOrderDetailRequest, config = {} as AxiosRequestConfig) {

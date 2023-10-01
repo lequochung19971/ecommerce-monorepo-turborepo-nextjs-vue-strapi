@@ -18,11 +18,12 @@ import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { ApiUrl } from 'types';
 
 import AppLogo from '@/common/components/AppLogo';
 import { AppRoute } from '@/common/enums/appRoute';
 import { useAppToast } from '@/common/hooks';
-import { ApiUrl, httpClient } from '@/common/http';
+import { httpClient } from '@/common/http';
 import httpStatusMessage from '@/common/json/httpStatusMessage.json';
 import { PasswordField } from '@/modules/auth';
 

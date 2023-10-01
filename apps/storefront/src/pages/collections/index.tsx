@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { SWRConfig, unstable_serialize } from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import { ApiUrl } from 'types';
 
-import { ApiUrl, getCategoriesEndpoint, getProductsEndpoint, httpMethods } from '@/common/http';
+import { getCategoriesEndpoint, getProductsEndpoint, httpMethods } from '@/common/http';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import { ProductCard } from '@/modules/products/components';
 import type { Category, Product } from '@/modules/products/types';
