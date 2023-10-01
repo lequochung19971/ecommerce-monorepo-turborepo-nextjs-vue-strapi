@@ -8,7 +8,6 @@
     {
       "name": "Storefront",
       "type": "node",
-      "request": "launch",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
@@ -24,7 +23,6 @@
     {
       "name": "CMS",
       "type": "node",
-      "request": "launch",
       "runtimeExecutable": "npm",
       "skipFiles": [
         "<node_internals>/**"
@@ -40,5 +38,32 @@
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}/apps/cms/"
     },
+    {
+      "name": "OMS",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "-w",
+        "oms",
+      ],
+      "runtimeExecutable": "npm",
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
   ],
+  "compounds": [
+    {
+      "name": "Start Ecommerce Project",
+      "configurations": [
+        "Storefront",
+        "CMS",
+        "OMS"
+      ],
+      "preLaunchTask": "${defaultBuildTask}",
+      "stopAll": true
+    }
+  ]
 }
