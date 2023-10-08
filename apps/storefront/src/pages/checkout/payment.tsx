@@ -22,6 +22,8 @@ import {
 } from '@chakra-ui/react';
 import type { OnApproveData } from '@paypal/paypal-js/types/components/buttons';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import type { CityModel, DistrictModel, WardModel } from 'configs';
+import { getCities, getDistricts, getWards } from 'configs';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -45,11 +47,7 @@ import {
 } from '@/common/http/endpoints/order-detail/post';
 import { httpFetcher } from '@/common/http/httpFetcher';
 import type { QueryResponse } from '@/common/types';
-import type { CityModel } from '@/common/types/cityModel';
-import type { DistrictModel } from '@/common/types/districtModel';
-import type { WardModel } from '@/common/types/wardModel';
 import { formatPrice } from '@/common/utilts/formatPrice';
-import { getCities, getDistricts, getWards } from '@/common/utilts/vietnamAddress';
 import type { CartItem } from '@/modules/checkout';
 import { CartItemComponent, OrderSummaryItem } from '@/modules/checkout/components';
 

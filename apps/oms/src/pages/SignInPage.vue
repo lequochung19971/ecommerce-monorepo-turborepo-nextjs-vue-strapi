@@ -7,6 +7,7 @@ import { z } from 'zod'
 import useAuth from '@/composables/useAuth'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import InputTextField from '@/components/form/InputTextField.vue'
 
 type SignInForm = {
   email: string
@@ -17,7 +18,7 @@ const { emailSignIn, googleSignIn } = useAuth()
 const toast = useToast()
 const router = useRouter()
 
-const { handleSubmit, errors, defineComponentBinds } = useForm<SignInForm>({
+const { handleSubmit, errors, defineComponentBinds, defineInputBinds } = useForm<SignInForm>({
   initialValues: {
     email: '',
     password: ''
@@ -79,19 +80,15 @@ const onSubmit = handleSubmit(async (values) => {
     <Card>
       <template #content>
         <form @submit="onSubmit" class="space-y-6">
-          <div class="flex flex-col w-full">
-            <label class="mb-2" for="email">Email *</label>
-            <InputText
-              v-bind="email"
-              type="email"
-              id="email"
-              :class="{
-                'p-invalid': !!errors.email
-              }"
-              placeholder="Enter an email"
-            />
-            <small class="p-error" id="text-error">{{ errors.email }}</small>
-          </div>
+          <InputTextField
+            :containerProps="{
+              class: 'w-full'
+            }"
+            name="email"
+            label="Email *"
+            placeholder="Enter an email"
+          ></InputTextField>
+
           <div class="flex flex-col w-full">
             <label class="mb-2" for="password">Password *</label>
             <Password

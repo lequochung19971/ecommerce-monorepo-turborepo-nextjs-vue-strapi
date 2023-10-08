@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, useRoute, useRouter } from 'vue-router'
 import Shell from '@/components/shell/Shell.vue'
-import useAuth from '@/composables/useAuth'
+import { getAuth } from '@/composables/useAuth'
 
 export type AppRoute = '/' | '/order-management' | '/order-management/:id' | '/auth/sign-in'
 
@@ -21,6 +21,10 @@ const router = createRouter({
             {
               path: '',
               component: () => import('@/pages/OrderManagementPage.vue')
+            },
+            {
+              path: ':id',
+              component: () => import('@/pages/OrderDetailPage.vue')
             }
           ]
         }
@@ -35,7 +39,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const { getCurrentUserInfo } = useAuth()
+  const { getCurrentUserInfo } = getAuth()
   const currentUserInfo = getCurrentUserInfo()
   const isAuthenticated = !!currentUserInfo
 

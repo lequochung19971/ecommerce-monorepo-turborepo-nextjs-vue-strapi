@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { MenuItem } from 'primevue/menuitem'
 import Toast from 'primevue/toast'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { AppRoute } from '@/router'
-import type OverlayPanel from 'primevue/overlaypanel'
+import OverlayPanel from 'primevue/overlaypanel'
 import useAuth from '@/composables/useAuth'
 
 type BreadCrumbType = MenuItem & {
@@ -32,7 +32,7 @@ const navigationItems = ref<NavigationItem[]>([
         hidden: true,
         breadcrumbs: [
           {
-            label: 'Test'
+            label: 'Order'
           }
         ]
       },
@@ -41,14 +41,18 @@ const navigationItems = ref<NavigationItem[]>([
         hidden: true,
         breadcrumbs: [
           {
-            label: 'Test'
+            route: '/order-management',
+            label: 'Order'
+          },
+          {
+            label: 'ID'
           }
         ]
       }
     ],
     breadcrumbs: [
       {
-        label: 'Test'
+        label: 'Order'
       }
     ]
   }
@@ -71,6 +75,7 @@ const home = ref({
 const overlayPanelElement = ref<OverlayPanel>()
 
 const route = useRoute()
+watch(route, (a) => console.log(a))
 const currentBreadcrumb = computed(() => {
   const currentRouteMatched = route.matched[route.matched.length - 1]
   let result: BreadCrumbType[] | undefined

@@ -4,8 +4,6 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "**/*.ts",
-    "."
   ],
   "exclude": [
     "src/**/__tests__/*"
@@ -14,6 +12,7 @@
     "composite": true,
     "baseUrl": ".",
     "moduleResolution": "node",
+    "isolatedModules": true,
     "paths": {
       "@/*": [
         "./src/*",

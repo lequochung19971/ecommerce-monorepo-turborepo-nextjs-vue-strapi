@@ -20,8 +20,9 @@
     "joi": "^17.9.1",
     "pg": "8.6.0",
     "strapi-plugin-transformer": "^2.2.0",
-    "types": "*",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "configs": "*",
+    "types": "*"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
@@ -32,10 +33,6 @@
   },
   "strapi": {
     "uuid": "6b2ff9f9-867d-444b-8c43-6da1d1a21f69"
-  },
-  "engines": {
-    "node": ">=18.16.0",
-    "npm": ">=8.0.0"
   },
   "license": "MIT"
 }

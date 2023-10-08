@@ -1,0 +1,18 @@
+{
+  "name": "configs",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint *.ts*",
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.9.4"
+  }
+}

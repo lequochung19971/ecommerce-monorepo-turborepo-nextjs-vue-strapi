@@ -92,4 +92,16 @@ const useAuth = () => {
     logout
   }
 }
+
+export const getAuth = () => {
+  return {
+    getCurrentUserInfo: () => {
+      const userInfo = localStorage.getItem(LocalStorageKey.USER_INFO)
+      if (!userInfo) return null
+
+      return JSON.parse(userInfo) as UserInfo
+    }
+  }
+}
+
 export default useAuth

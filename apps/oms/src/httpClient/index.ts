@@ -1,11 +1,13 @@
-import useAuth from '@/composables/useAuth'
+import useAuth, { getAuth } from '@/composables/useAuth'
 import axios from 'axios'
 import { stringify } from 'qs'
 
 const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   paramsSerializer: (params) => {
-    return stringify(params)
+    return stringify(params, {
+      encodeValuesOnly: true
+    })
   }
 })
 
@@ -14,13 +16,10 @@ type ResponseParams = Parameters<typeof httpClient.interceptors.response.use>
 
 // ================================== Interceptors Request ==================================
 const requestFulfilled: RequestParams[0] = async (config) => {
-  const { getCurrentUserInfo } = useAuth()
+  const { getCurrentUserInfo } = getAuth()
   const currentUserInfo = getCurrentUserInfo()
   if (currentUserInfo) {
-    config.headers = {
-      ...(config.headers ?? {}),
-      Authorization: `Bearer ${currentUserInfo.accessToken}`
-    } as any
+    config.headers.Authorization = `Bearer ${currentUserInfo.accessToken}`
   }
 
   return config

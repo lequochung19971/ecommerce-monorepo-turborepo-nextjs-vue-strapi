@@ -23,9 +23,6 @@
     "prettier": "latest",
     "turbo": "latest"
   },
-  "engines": {
-    "node": ">=18.16.0"
-  },
   "dependencies": {},
   "packageManager": "npm@8.3.1"
 }
