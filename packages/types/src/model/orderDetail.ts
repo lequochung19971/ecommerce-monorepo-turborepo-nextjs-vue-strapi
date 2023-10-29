@@ -7,6 +7,7 @@ import { Address } from '../type/address';
 
 export type OrderDetail = BaseModel & {
   user: User;
+  rider?: User;
   email: string;
   phoneNumber: string;
   orderItems: OrderItem[];

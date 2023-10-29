@@ -1,3 +1,8 @@
 export enum QueryKey {
-  ORDER_MANAGEMENT = 'orderManagement'
+  ORDER_DETAIL = 'orderDetail',
+  ORDER_ITEM = 'orderItem',
+  USER = 'user',
+  PAYMENT_DETAIL = 'paymentDetail',
+
+  PRODUCT = 'product'
 }

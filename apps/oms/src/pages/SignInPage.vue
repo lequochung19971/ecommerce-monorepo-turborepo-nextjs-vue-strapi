@@ -18,7 +18,7 @@ const { emailSignIn, googleSignIn } = useAuth()
 const toast = useToast()
 const router = useRouter()
 
-const { handleSubmit, errors, defineComponentBinds, defineInputBinds } = useForm<SignInForm>({
+const { handleSubmit, errors, defineComponentBinds } = useForm<SignInForm>({
   initialValues: {
     email: '',
     password: ''

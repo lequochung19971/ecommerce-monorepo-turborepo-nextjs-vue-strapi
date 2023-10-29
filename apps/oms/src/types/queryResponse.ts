@@ -6,6 +6,8 @@ export type QueryResponse<T> = {
       pageCount?: number
       pageSize?: number
       total?: number
+      start?: number
+      limit?: number
     }
   }
 }

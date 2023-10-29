@@ -31,7 +31,7 @@ const useAuth = () => {
   }
 
   const getCallbackUrl = () => {
-    return localStorage.getItem(LocalStorageKey.CALLBACK_URL) ?? ('/' as AppRoute)
+    return localStorage.getItem(LocalStorageKey.CALLBACK_URL) ?? ('/dashboard' as AppRoute)
   }
 
   const googleSignIn = async () => {

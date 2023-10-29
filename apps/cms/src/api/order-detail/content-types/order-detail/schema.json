@@ -39,8 +39,7 @@
     "paymentDetail": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::payment-detail.payment-detail",
-      "inversedBy": "orderDetail"
+      "target": "api::payment-detail.payment-detail"
     },
     "orderStatus": {
       "type": "enumeration",
@@ -53,6 +52,11 @@
       ],
       "default": "pending",
       "required": false
+    },
+    "rider": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

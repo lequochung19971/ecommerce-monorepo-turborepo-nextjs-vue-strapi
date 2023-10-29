@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import type { DropdownProps, DropdownSlots } from 'primevue/dropdown'
-import { Field, useField } from 'vee-validate'
-import { watch, type HTMLAttributes, type LabelHTMLAttributes } from 'vue'
+import { useField } from 'vee-validate'
+import { type HTMLAttributes, type LabelHTMLAttributes, useAttrs, computed } from 'vue'
 import type { BaseFieldProps } from './baseFieldProps'
+import ReadOnlyText from './ReadOnlyText.vue'
 interface DropdownFieldProps extends /* @vue-ignore */ DropdownProps, BaseFieldProps {
   labelProps?: LabelHTMLAttributes
   containerProps?: HTMLAttributes
 }
 const props = defineProps<DropdownFieldProps>()
 defineSlots<DropdownSlots>()
+const { options } = useAttrs() as DropdownProps
 const { value, errorMessage } = useField(props.name)
-watch(value, (v) => console.log(v))
+const textReadOnly = computed(() => options?.find((o) => o.value === value.value)?.label ?? '')
 </script>
 
 <template>
-  <div v-bind="props.containerProps" class="flex flex-col">
+  <template v-if="props.readOnly">
+    <ReadOnlyText
+      :text="textReadOnly"
+      :label="props.label"
+      :labelProps="props.labelProps"
+      :containerProps="props.containerProps"
+    />
+  </template>
+  <div v-else v-bind="props.containerProps" class="flex flex-col">
     <label v-bind="props.labelProps" class="mb-2">{{ props.label }}</label>
     <Dropdown
       v-bind="$attrs"

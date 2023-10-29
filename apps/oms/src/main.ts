@@ -22,8 +22,11 @@ import ToastService from 'primevue/toastservice'
 import Toast from 'primevue/toast'
 import Avatar from 'primevue/avatar'
 import OverlayPanel from 'primevue/overlaypanel'
-import { VueQueryPlugin } from '@tanstack/vue-query'
+import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import Dropdown from 'primevue/dropdown'
+import { appQueryClient } from './configs/appQueryClient'
+import MultiSelect from 'primevue/multiselect'
+import InputNumber from 'primevue/inputnumber'
 
 // App
 const app = createApp(App)
@@ -46,6 +49,8 @@ app.component('Toast', Toast)
 app.component('Avatar', Avatar)
 app.component('OverlayPanel', OverlayPanel)
 app.component('Dropdown', Dropdown)
+app.component('MultiSelect', MultiSelect)
+app.component('InputNumber', InputNumber)
 
 // Pinia
 app.use(createPinia())
@@ -58,8 +63,9 @@ app.use(vue3GoogleLogin, {
   clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
   popupType: 'CODE'
 })
-
 // Vue Query
-app.use(VueQueryPlugin)
+app.use(VueQueryPlugin, {
+  queryClient: appQueryClient
+})
 
 app.mount('#app')

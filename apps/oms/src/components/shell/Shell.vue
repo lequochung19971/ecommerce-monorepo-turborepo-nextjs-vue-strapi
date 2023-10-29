@@ -20,15 +20,15 @@ const navigationItems = ref<NavigationItem[]>([
   {
     label: 'Dashboard',
     icon: 'pi pi-fw pi-plus',
-    route: '/'
+    route: '/dashboard'
   },
   {
-    label: 'Order Management',
+    label: 'Orders',
     icon: 'pi pi-fw pi-trash',
-    route: '/order-management',
+    route: '/orders',
     children: [
       {
-        route: '/order-management',
+        route: '/orders',
         hidden: true,
         breadcrumbs: [
           {
@@ -37,15 +37,28 @@ const navigationItems = ref<NavigationItem[]>([
         ]
       },
       {
-        route: '/order-management/:id',
+        route: '/orders/create',
         hidden: true,
         breadcrumbs: [
           {
-            route: '/order-management',
+            route: '/orders',
             label: 'Order'
           },
           {
-            label: 'ID'
+            label: 'create'
+          }
+        ]
+      },
+      {
+        route: '/orders/:id',
+        hidden: true,
+        breadcrumbs: [
+          {
+            route: '/orders',
+            label: 'Order'
+          },
+          {
+            label: 'Edit Order'
           }
         ]
       }
@@ -75,7 +88,6 @@ const home = ref({
 const overlayPanelElement = ref<OverlayPanel>()
 
 const route = useRoute()
-watch(route, (a) => console.log(a))
 const currentBreadcrumb = computed(() => {
   const currentRouteMatched = route.matched[route.matched.length - 1]
   let result: BreadCrumbType[] | undefined
@@ -119,13 +131,11 @@ const currentBreadcrumb = computed(() => {
               <a :href="routerProps.href" v-bind="props.action">
                 <span
                   v-bind="props.icon"
-                  :class="routerProps.isExactActive ? '!text-primary' : ''"
+                  :class="routerProps.isActive ? '!text-primary' : ''"
                 ></span>
-                <span
-                  v-bind="props.label"
-                  :class="routerProps.isExactActive ? '!text-primary' : ''"
-                  >{{ label }}</span
-                >
+                <span v-bind="props.label" :class="routerProps.isActive ? '!text-primary' : ''">{{
+                  label
+                }}</span>
               </a>
             </RouterLink>
           </template>

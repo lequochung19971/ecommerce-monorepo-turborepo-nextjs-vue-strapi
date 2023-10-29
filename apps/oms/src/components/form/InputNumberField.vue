@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { InputTextProps } from 'primevue/inputtext'
 import { Field, useField } from 'vee-validate'
 import { type HTMLAttributes, type LabelHTMLAttributes } from 'vue'
 import type { BaseFieldProps } from './baseFieldProps'
 import ReadOnlyText from './ReadOnlyText.vue'
-interface InputTextFieldProps extends /* @vue-ignore */ InputTextProps, BaseFieldProps {
+import type { InputNumberProps } from 'primevue/inputnumber'
+interface InputNumberFieldProps extends /* @vue-ignore */ InputNumberProps, BaseFieldProps {
   label?: string
   name: string
   labelProps?: LabelHTMLAttributes
   containerProps?: HTMLAttributes
 }
-const props = defineProps<InputTextFieldProps>()
+const props = defineProps<InputNumberFieldProps>()
 const { value, errorMessage } = useField<string>(props.name)
 </script>
 
@@ -26,7 +26,7 @@ const { value, errorMessage } = useField<string>(props.name)
   <div v-else v-bind="props.containerProps" class="flex flex-col">
     <Field :name="props.name" #="{ field, errorMessage }">
       <label v-bind="props.labelProps" class="mb-2">{{ props.label }}</label>
-      <InputText
+      <InputNumber
         v-bind="{
           ...$attrs,
           ...props,

@@ -15,39 +15,48 @@ export default factories.createCoreController(
     async create(ctx) {
       try {
         const that = this as Controller;
-        const { user } = ctx.state;
+        const { user: currentUser } = ctx.state;
 
-        console.log("Request", ctx.request.body);
-
-        if (!user) {
+        if (!currentUser) {
           return ctx.notFound("User is not found");
         }
 
-        const { itemIds, address, phoneNumber, email, payment } = ctx.request
-          .body as CreateOrderDetailRequest;
+        const {
+          itemIds = [],
+          address,
+          phoneNumber,
+          email,
+          payment,
+          user,
+          orderItems = [],
+          rider,
+        } = ctx.request.body as CreateOrderDetailRequest;
 
-        const findResult = await strapi
-          .service("api::cart-item.cart-item")
-          .find({
-            filters: {
-              id: itemIds,
-            },
-            pagination: {
-              start: 0,
-              limit: -1,
-            },
-            populate: "*",
-          });
-        console.log("Find Card Items result", findResult);
+        let cartItems = [];
 
-        const { results: cartItems } = findResult as { results: any[] };
+        if (itemIds?.length) {
+          const findResult = await strapi
+            .service("api::cart-item.cart-item")
+            .find({
+              filters: {
+                id: itemIds,
+              },
+              pagination: {
+                start: 0,
+                limit: -1,
+              },
+              populate: "*",
+            });
 
-        const isValidItems =
-          !!cartItems?.length &&
-          isEqual(cartItems.map((item) => item.id).sort(), itemIds.sort());
+          cartItems = (findResult as { results: any[] }).results;
 
-        if (!isValidItems) {
-          return ctx.badRequest("Invalid Cart Items");
+          const isValidItems =
+            !!cartItems?.length &&
+            isEqual(cartItems.map((item) => item.id).sort(), itemIds.sort());
+
+          if (!isValidItems) {
+            return ctx.badRequest("Invalid Cart Items");
+          }
         }
 
         const createResult: any = await strapi
@@ -56,11 +65,12 @@ export default factories.createCoreController(
             phoneNumber,
             email,
             items: cartItems,
-            user,
+            user: user ?? currentUser,
+            orderItems,
             payment,
+            rider,
           } as CreateOrderDetailArgs);
 
-        console.log("createResult", createResult);
         const updateResult = await strapi
           .service("api::order-detail.order-detail")
           .update(createResult.id, {
@@ -68,10 +78,8 @@ export default factories.createCoreController(
               address,
             },
           });
-        console.log("updateResult", updateResult);
         ctx.response.body = await that.sanitizeOutput(updateResult, ctx);
       } catch (error) {
-        console.log("Something wrong", error);
         ctx.internalServerError(error);
       }
     },
@@ -79,15 +87,11 @@ export default factories.createCoreController(
       const that = this as Controller;
       const { user } = ctx.state;
 
-      console.log("Request", ctx.request.body);
-
       if (!user) {
         return ctx.notFound("User is not found");
       }
 
       const { orderDetailId, paypalOrderId } = ctx.request.body;
-      console.log("orderDetailId", orderDetailId);
-      console.log("paypalOrderId", paypalOrderId);
 
       const orderDetail = await strapi
         .service("api::order-detail.order-detail")
@@ -102,7 +106,6 @@ export default factories.createCoreController(
       const { paymentDetail } = orderDetail;
 
       const captureResponse = await paypal.capturePayment(paypalOrderId);
-      console.log(captureResponse);
       await strapi
         .service("api::payment-detail.payment-detail")
         .update(paymentDetail.id, {
@@ -117,21 +120,17 @@ export default factories.createCoreController(
       const that = this as Controller;
       const { user } = ctx.state;
 
-      console.log("Request", ctx.request.body);
-
       if (!user) {
         return ctx.notFound("User is not found");
       }
 
       const { cartItemIds } = ctx.request.body as { cartItemIds: string[] };
-      console.log("orderId", cartItemIds);
       const cartItems: any = await strapi
         .service("api::cart-item.cart-item")
         .find({
           where: cartItemIds,
           populate: "*",
         });
-      console.log("cartItems", cartItems);
       const totalCost = (cartItems.results as any[]).reduce((total, cart) => {
         total = total + +cart.product.price * cart.quantity;
         return total;
@@ -139,8 +138,7 @@ export default factories.createCoreController(
       const createPaypalResponse = await paypal.createOrder({
         totalCost,
       });
-      console.log("createPaypalResponse", createPaypalResponse);
       ctx.response.body = createPaypalResponse;
     },
-  })
+  }),
 );

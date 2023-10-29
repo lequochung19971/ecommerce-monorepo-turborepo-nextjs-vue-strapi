@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import produce from 'immer';
 import { set } from 'lodash';
 import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 import * as React from 'react';
 import useSWR from 'swr';
 import { ApiUrl } from 'types';
@@ -16,13 +17,23 @@ import { CartItemComponent, CartOrderSummary } from '@/modules/checkout/componen
 import type { CartItem } from '@/modules/checkout/types/cartItem';
 
 const ShoppingCartPage: NextPage = () => {
+  const { data } = useSession();
   const { data: response, mutate: mutateQueryCartItems } = useSWR(
-    httpMethods.get(ApiUrl.CART_ITEMS, {
-      params: {
-        populate: ['product.media'],
-        sort: ['createdAt'],
-      },
-    }),
+    data?.user?.id
+      ? httpMethods.get(ApiUrl.CART_ITEMS, {
+          params: {
+            populate: ['product.media'],
+            sort: ['createdAt'],
+            filters: {
+              shoppingSession: {
+                user: {
+                  id: data?.user?.id,
+                },
+              },
+            },
+          },
+        })
+      : null,
     httpFetcher<QueryResponse<CartItem[]>>(),
   );
   const cartItems = response?.data ?? [];

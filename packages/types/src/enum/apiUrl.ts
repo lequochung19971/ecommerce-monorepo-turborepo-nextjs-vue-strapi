@@ -7,6 +7,7 @@ export enum ApiUrl {
   AUTH_GITHUB_CALLBACK = '/api/auth/github/callback',
 
   USER_ME = '/user/me',
+  USERS = '/api/users',
 
   PRODUCTS = '/api/products',
   CATEGORIES = '/api/categories',
@@ -18,4 +19,7 @@ export enum ApiUrl {
   ORDER_DETAILS = '/api/order-details',
   ORDER_DETAILS_PAYPAL_ORDER_CREATION = '/api/order-details/paypal-order-creation',
   ORDER_DETAILS_PAYPAL_ORDER_CAPTURE = '/api/order-details/paypal-order-capture',
+
+  ORDER_ITEMS = '/api/order-items',
+  PAYMENT_DETAILS = '/api/payment-details',
 }

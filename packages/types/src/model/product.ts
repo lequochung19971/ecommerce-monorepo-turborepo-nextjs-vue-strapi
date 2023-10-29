@@ -1,4 +1,5 @@
 import { BaseModel } from './baseModel';
+import { Category } from './category';
 
 export type Product = BaseModel & {
   name: string;
@@ -6,4 +7,5 @@ export type Product = BaseModel & {
   price: number;
   description?: string;
   media?: any;
+  categories: Category[];
 };

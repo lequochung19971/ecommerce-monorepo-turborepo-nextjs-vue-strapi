@@ -63,10 +63,10 @@
       "configurable": false
     },
     "firstName": {
-      "type": "text"
+      "type": "string"
     },
     "lastName": {
-      "type": "text"
+      "type": "string"
     }
   }
 }

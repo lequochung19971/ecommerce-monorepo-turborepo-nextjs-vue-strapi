@@ -5,5 +5,5 @@ import { Product } from './product';
 export type OrderItem = BaseModel & {
   quantity: number;
   product: Product;
-  orderDetail: OrderDetail;
+  orderDetail?: OrderDetail;
 };

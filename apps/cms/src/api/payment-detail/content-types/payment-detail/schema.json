@@ -25,26 +25,21 @@
       "type": "enumeration",
       "enum": [
         "pending",
-        "cancel",
+        "cancelled",
         "paid"
       ],
       "default": "pending",
       "required": true
     },
-    "type": {
+    "method": {
       "type": "enumeration",
       "enum": [
-        "cash",
-        "paypalBalance",
+        "cod",
+        "digitalWallet",
         "debit",
-        "credit"
+        "credit",
+        "bankTransfer"
       ]
-    },
-    "orderDetail": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::order-detail.order-detail",
-      "mappedBy": "paymentDetail"
     },
     "extraInfo": {
       "type": "json"

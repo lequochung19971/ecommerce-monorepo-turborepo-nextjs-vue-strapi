@@ -32,7 +32,7 @@ import { useMemo } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import useSWR, { useSWRConfig } from 'swr';
 import type { CreateOrderDetailRequest } from 'types';
-import { ApiUrl, PaymentProvider, PaymentType } from 'types';
+import { ApiUrl, PaymentMethod, PaymentProvider } from 'types';
 
 import masterIcon from '@/common/assets/mastercard.svg';
 import visaIcon from '@/common/assets/visa.svg';
@@ -90,7 +90,7 @@ type OrderDetailHookForm = {
   ward: WardModel | null;
   address1: string;
   country: string;
-  paymentType: PaymentType;
+  paymentType: PaymentMethod;
 };
 
 const PaymentPage: NextPage = () => {
@@ -108,7 +108,7 @@ const PaymentPage: NextPage = () => {
       ward: null as WardModel | null,
       address1: '',
       country: '84',
-      paymentType: PaymentType.CASH,
+      paymentType: PaymentMethod.COD,
     },
   });
   const { register, control, setValue, handleSubmit, getValues } = hookForm;
@@ -117,7 +117,6 @@ const PaymentPage: NextPage = () => {
   const city = useWatch({ control, name: 'city' });
   const district = useWatch({ control, name: 'district' });
   const paymentType = useWatch({ control, name: 'paymentType' });
-  console.log(paymentType);
 
   const cityOptions = cities;
   const districtOptions = useMemo(() => districts.filter((d) => d.parentId === city?.id), [city?.id]);
@@ -154,7 +153,7 @@ const PaymentPage: NextPage = () => {
       itemIds: cartItems.map((item) => item.id),
       phoneNumber: values.phoneNumber,
       payment: {
-        type: PaymentType.CASH,
+        method: PaymentMethod.COD,
         provider: undefined,
       },
     };
@@ -213,7 +212,7 @@ const PaymentPage: NextPage = () => {
         itemIds: cartItems.map((item) => item.id),
         phoneNumber: values.phoneNumber,
         payment: {
-          type: PaymentType.PAYPAL_BALANCE,
+          method: PaymentMethod.DIGITAL_WALLET,
           provider: PaymentProvider.PAYPAL,
         },
       };
@@ -369,7 +368,7 @@ const PaymentPage: NextPage = () => {
                     render={({ field }) => (
                       <RadioGroup {...field}>
                         <Stack direction="row">
-                          <Radio flex="1" value="cash" size="lg">
+                          <Radio flex="1" value={PaymentMethod.COD} size="lg">
                             <Stack spacing="0">
                               <Box as="span" fontSize="lg" fontWeight="semibold">
                                 Pay in cash
@@ -379,7 +378,7 @@ const PaymentPage: NextPage = () => {
                               </Box>
                             </Stack>
                           </Radio>
-                          <Radio flex="1" value="paypalBalance" size="lg">
+                          <Radio flex="1" value={PaymentMethod.DIGITAL_WALLET} size="lg">
                             <Stack spacing="0">
                               <Box as="span" fontSize="lg" fontWeight="semibold">
                                 Paypal
@@ -452,14 +451,14 @@ const PaymentPage: NextPage = () => {
                   </Flex>
                   {(() => {
                     switch (paymentType) {
-                      case PaymentType.CASH: {
+                      case PaymentMethod.COD: {
                         return (
                           <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
                             Place order
                           </Button>
                         );
                       }
-                      case PaymentType.PAYPAL_BALANCE: {
+                      case PaymentMethod.DIGITAL_WALLET: {
                         return (
                           <PayPalScriptProvider options={initialOptions}>
                             <PayPalButtons createOrder={createPaypalOrder} onApprove={onPaypalApprove} />

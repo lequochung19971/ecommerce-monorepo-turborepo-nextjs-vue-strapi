@@ -34,13 +34,8 @@ const options: AuthOptions = {
             name: data.user.username,
             accessToken: data.jwt,
           };
-          // eslint-disable-next-line no-useless-catch
         } catch (e) {
           throw e;
-          // console.log('caught error');
-          // const errorMessage = e.response.data.message
-          // Redirecting to the login page with error message          in the URL
-          // throw new Error(errorMessage + '&email=' + credentials.email)
         }
       },
     }),
@@ -61,6 +56,7 @@ const options: AuthOptions = {
       if (isSignIn) {
         switch (account?.provider) {
           case AuthProvider.GOOGLE: {
+            console.log(account, user);
             const { data } = await httpClient.get<UserLoginResponse>(
               `${ApiUrl.AUTH_GOOGLE_CALLBACK}?access_token=${account?.access_token}`,
             );
