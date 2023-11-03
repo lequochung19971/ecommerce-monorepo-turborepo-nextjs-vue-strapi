@@ -20,7 +20,7 @@ export const useUpdatePaymentDetailMutation: AxiosUseMutation<unknown, Partial<P
         opt.onSuccess?.(data, variable, context)
       }
       appQueryClient.invalidateQueries({
-        queryKey: [QueryKey.PAYMENT_DETAIL]
+        queryKey: [QueryKey.PAYMENT_DETAILS]
       })
     }
   })

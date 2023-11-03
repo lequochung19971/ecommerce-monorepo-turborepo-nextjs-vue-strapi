@@ -3,21 +3,24 @@ import httpClient from '@/httpClient'
 import type { AxiosUseMutation } from '@/types/axiosUseMutation'
 import { QueryKey } from '@/types/queryKey'
 import { useMutation } from '@tanstack/vue-query'
-import type { CreateOrderDetailRequest } from 'types'
+import type { UpdateCategoryRequest } from 'types'
 import { ApiUrl } from 'types'
 
-export const useCreateOrderDetailMutation: AxiosUseMutation<unknown, CreateOrderDetailRequest> = (
+export const useUpdateCategoryMutation: AxiosUseMutation<unknown, UpdateCategoryRequest> = (
   opt = {}
 ) => {
   return useMutation({
-    mutationFn: (updatedOrderDetail) => httpClient.post(ApiUrl.ORDER_DETAILS, updatedOrderDetail),
+    mutationFn: (updatedCategory) =>
+      httpClient.put(`${ApiUrl.CATEGORIES}/${updatedCategory.id}`, {
+        data: updatedCategory
+      }),
     ...opt,
     onSuccess: (data, variable, context) => {
       if (typeof opt.onSuccess === 'function') {
         opt.onSuccess?.(data, variable, context)
       }
       appQueryClient.invalidateQueries({
-        queryKey: [QueryKey.ORDER_DETAILS]
+        queryKey: [QueryKey.CATEGORIES]
       })
     }
   })

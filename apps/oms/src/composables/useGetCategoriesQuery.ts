@@ -3,21 +3,22 @@ import type { AxiosUseQuery } from '@/types/axiosUseQuery'
 import { QueryKey } from '@/types/queryKey'
 import { type QueryResponse } from '@/types/queryResponse'
 import { useQuery } from '@tanstack/vue-query'
-import type { OrderItem } from 'types'
+import type { Category } from 'types'
 import { ApiUrl } from 'types'
 import { toValue } from 'vue'
 
-export const useOrderItemsQuery: AxiosUseQuery<object, QueryResponse<OrderItem[]>> = (
-  queryParams: object,
+export const useGetCategoriesQuery: AxiosUseQuery<object, QueryResponse<Category[]>> = (
+  queryParams: any,
   opt = {}
 ) => {
   return useQuery({
-    queryKey: [QueryKey.ORDER_ITEM, queryParams],
-    queryFn: () =>
-      httpClient.get(ApiUrl.ORDER_ITEMS, {
+    queryKey: [QueryKey.CATEGORIES, queryParams],
+    queryFn: () => {
+      return httpClient.get(ApiUrl.CATEGORIES, {
         params: toValue(queryParams)
-      }),
-    staleTime: 15000,
+      })
+    },
+    staleTime: 15 * 1000,
     ...opt
   })
 }

@@ -24,7 +24,7 @@ const navigationItems = ref<NavigationItem[]>([
   },
   {
     label: 'Orders',
-    icon: 'pi pi-fw pi-trash',
+    icon: 'pi pi-fw pi-shopping-cart',
     route: '/orders',
     children: [
       {
@@ -45,7 +45,7 @@ const navigationItems = ref<NavigationItem[]>([
             label: 'Order'
           },
           {
-            label: 'create'
+            label: 'Create'
           }
         ]
       },
@@ -58,7 +58,7 @@ const navigationItems = ref<NavigationItem[]>([
             label: 'Order'
           },
           {
-            label: 'Edit Order'
+            label: 'Edit'
           }
         ]
       }
@@ -66,6 +66,53 @@ const navigationItems = ref<NavigationItem[]>([
     breadcrumbs: [
       {
         label: 'Order'
+      }
+    ]
+  },
+  {
+    label: 'Categories',
+    icon: 'pi pi-fw pi-th-large',
+    route: '/categories',
+    children: [
+      {
+        route: '/categories',
+        hidden: true,
+        breadcrumbs: [
+          {
+            label: 'Categories'
+          }
+        ]
+      },
+      {
+        route: '/categories/create',
+        hidden: true,
+        breadcrumbs: [
+          {
+            route: '/categories',
+            label: 'Categories'
+          },
+          {
+            label: 'Create'
+          }
+        ]
+      },
+      {
+        route: '/categories/:id',
+        hidden: true,
+        breadcrumbs: [
+          {
+            route: '/categories',
+            label: 'Categories'
+          },
+          {
+            label: 'Edit'
+          }
+        ]
+      }
+    ],
+    breadcrumbs: [
+      {
+        label: 'Categories'
       }
     ]
   }

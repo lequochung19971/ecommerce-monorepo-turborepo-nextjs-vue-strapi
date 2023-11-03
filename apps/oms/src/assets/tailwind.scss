@@ -22,4 +22,11 @@
   .border-default-b {
     @apply border-b border-solid border-[#dee2e6]
   }
+
+}
+
+@layer components {
+  .page-container {
+    @apply rounded-xl border-default p-4 bg-white;
+  }
 }

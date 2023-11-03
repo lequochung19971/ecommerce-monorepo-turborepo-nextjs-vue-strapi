@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useOrderDetailQuery } from '@/composables/useOrderDetailQuery'
-import { computed, reactive, ref, toValue, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useGetOrderDetailQuery } from '@/composables/useGetOrderDetailQuery'
+import { computed, onMounted, reactive, ref, toValue, watch } from 'vue'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import {
   OrderStatus,
@@ -13,7 +13,6 @@ import {
 } from 'types'
 import InputTextField from '@/components/form/InputTextField.vue'
 import DropdownField from '@/components/form/DropdownField.vue'
-import InputNumberField from '@/components/form/InputNumberField.vue'
 import {
   getCities,
   getDistricts,
@@ -23,12 +22,11 @@ import {
   paymentProviderDataSource,
   paymentStatusDataSource
 } from 'configs'
-import { useOrderItemsQuery } from '@/composables/useOrderItemsQuery'
+import { useGetOrderItemsQuery } from '@/composables/useGetOrderItemsQuery'
 import { useUsersQuery } from '@/composables/useUsersQuery'
 import { useUpdateOrderDetailMutation } from '@/composables/useUpdateOrderDetailMutation'
 import { useUpdatePaymentDetailMutation } from '@/composables/useUpdatePaymentDetailMutation'
 import { useToast } from 'primevue/usetoast'
-import { useProductsQuery } from '@/composables/useProductsQuery'
 import { v4 as uuidv4 } from 'uuid'
 import InputNumber from 'primevue/inputnumber'
 import { useInfiniteQuery } from '@tanstack/vue-query'
@@ -53,7 +51,7 @@ const toast = useToast()
 const router = useRouter()
 const { params } = useRoute()
 const { id = '' } = params
-const { data: response, isSuccess } = useOrderDetailQuery(
+const { data: response, isSuccess } = useGetOrderDetailQuery(
   {
     id: id as string,
     params: {
@@ -76,11 +74,8 @@ const { mutate: upsertOrderDetail, isLoading: isUpsertOrderDetailLoading } =
   useUpdateOrderDetailMutation()
 const { mutate: upsertPaymentDetail, isLoading: isUpsertPaymentDetailLoading } =
   useUpdatePaymentDetailMutation()
-const {
-  mutate: createOrderDetail,
-  isLoading: isCreateOrderDetailLoading,
-  mutateAsync: createOrderDetailAsync
-} = useCreateOrderDetailMutation()
+const { isLoading: isCreateOrderDetailLoading, mutateAsync: createOrderDetailAsync } =
+  useCreateOrderDetailMutation()
 const users = computed(() => queryUsersResponse.value?.data ?? [])
 
 const currentOrderDetail = computed(() => response.value?.data.data)
@@ -100,14 +95,14 @@ const queryItemsParams = reactive({
   },
   sort: [] as string[]
 })
-const { data: queryOrderItemsResponse, isFetching } = useOrderItemsQuery(queryItemsParams, {
+const { data: queryOrderItemsResponse, isFetching } = useGetOrderItemsQuery(queryItemsParams, {
   enabled: !!id
 })
 
 const search = ref('')
 
 const { data, fetchNextPage } = useInfiniteQuery<QueryResponse<Product[]>>({
-  queryKey: [QueryKey.PRODUCT, search],
+  queryKey: [QueryKey.PRODUCTS, search],
   queryFn: ({ pageParam }) => {
     return httpClient
       .get(ApiUrl.PRODUCTS, {
@@ -132,7 +127,7 @@ const { data, fetchNextPage } = useInfiniteQuery<QueryResponse<Product[]>>({
   },
   enabled: props.mode === 'create'
 })
-const finalData = computed(() => {
+const products = computed(() => {
   const lastPage = data.value?.pages?.[data.value?.pages.length - 1]
   return {
     data: data.value?.pages.reduce((result, page) => {
@@ -251,7 +246,7 @@ const onSubmit = handleSubmit((formValue) => {
 const selectedProductIds = ref([] as string[])
 const selectedOrderItems = ref([] as OrderItem[])
 const onLazyLoadProducts = (e: { last: number }) => {
-  const { start = 0, total = 0, limit = 0 } = finalData.value.meta.pagination ?? {}
+  const { start = 0, total = 0, limit = 0 } = products.value.meta.pagination ?? {}
   if (start >= total) {
     return
   }
@@ -263,9 +258,9 @@ const onLazyLoadProducts = (e: { last: number }) => {
 const handleUpdateModelValue = (changedIds: string[]) => {
   const previousIds = selectedOrderItems.value.map((p) => p.product.id)
   const newIds = changedIds.filter((cid) => !previousIds.includes(cid))
-  const deleteIds = previousIds.filter((pid) => !changedIds.includes(pid))
-  const newOrderItems = (finalData.value.data ?? [])
-    ?.filter((p) => newIds.includes(p.id))
+  const deleteIds = previousIds.filter((pid) => !changedIds.includes(pid as string))
+  const newOrderItems = (products.value.data ?? [])
+    ?.filter((p) => newIds.includes(p.id as string))
     .map(
       (p) =>
         ({
@@ -298,10 +293,19 @@ watch(
     }
   }
 )
+
+onBeforeRouteLeave(() => {
+  if (meta.value.dirty) {
+    const answer = window.confirm('Do you really want to leave? You have unsaved changes!')
+    if (!answer) return false
+  }
+
+  return true
+})
 </script>
 
 <template>
-  <form @submit="onSubmit" class="rounded-xl border-default p-4 bg-white space-y-4">
+  <form @submit="onSubmit" class="page-container space-y-4">
     <section>
       <h1 class="text-xl mb-6 text-primary"># Customer</h1>
       <div class="flex flex-row justify-between mx-[-0.5rem]">
@@ -319,7 +323,8 @@ watch(
             :virtualScrollerOptions="{
               itemSize: 48
             }"
-          ></DropdownField>
+          >
+          </DropdownField>
         </template>
         <template v-else>
           <InputTextField
@@ -386,7 +391,8 @@ watch(
           optionValue="value"
           label="Status"
           name="orderStatus"
-        ></DropdownField>
+        >
+        </DropdownField>
         <DropdownField
           :containerProps="{
             class: 'w-1/3 px-2 pb-2'
@@ -467,7 +473,7 @@ watch(
           <MultiSelect
             v-model="selectedProductIds"
             @update:modelValue="handleUpdateModelValue"
-            :options="finalData.data ?? []"
+            :options="products.data ?? []"
             optionLabel="name"
             optionValue="id"
             placeholder="Select Products"
@@ -478,7 +484,7 @@ watch(
             class="w-full mb-4 product-list"
             :pt="{
               virtualScroller: 'test',
-              panel: 'test-panel'
+              panel: 'order-detail-page__multiple-select-product'
             }"
             :virtualScrollerOptions="{
               lazy: true,
@@ -694,10 +700,9 @@ watch(
   </form>
 </template>
 
-<style lang="scss">
-.test-panel {
-  .p-virtualscroller.p-virtualscroller {
-    height: 300px !important;
-  }
+<style scoped lang="scss">
+:global(.order-detail-page__multiple-select-product .p-virtualscroller) {
+  height: 300px !important;
 }
 </style>
+@/composables/useGetOrderDetailQuery @/composables/useGetOrderItemsQuery

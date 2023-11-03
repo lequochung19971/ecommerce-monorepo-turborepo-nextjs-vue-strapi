@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDeleteOrderDetailMutation } from '@/composables/useDeleteOrderDetailMutation'
-import { useOrderDetailsQuery } from '@/composables/useOrderDetailsQuery'
+import { useGetOrderDetailsQuery } from '@/composables/useGetOrderDetailsQuery'
 import type { AppRoute } from '@/router'
 import { QueryKey } from '@/types/queryKey'
 import type { QueryResponse } from '@/types/queryResponse'
@@ -9,65 +9,53 @@ import type { AxiosResponse } from 'axios'
 import type { DataTablePageEvent, DataTableSortEvent } from 'primevue/datatable'
 import type { OrderDetail } from 'types'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { throttle } from 'lodash'
+import { useRouter } from 'vue-router'
+import SearchField from '@/components/SearchField.vue'
+import { useRouteFilter } from '@/composables/useRouteFilter'
+import { convertToSortString } from '@/helpers/convertToSortString'
 
-const route = useRoute()
 const router = useRouter()
-const sortConfig = {
-  [1]: 'asc',
-  [-1]: 'desc'
-}
+const [routeFilterParams, upsertRouteFieldParams] = useRouteFilter()
 
-const routeQuery = computed(() => {
-  return {
-    page: +((route.query?.page as unknown as number) ?? 1),
-    pageSize: +((route.query?.pageSize as unknown as number) ?? 5),
-    sortOrder: +(route.query?.sortOrder as unknown as number),
-    sortField: (route.query?.sortField as string) ?? '',
-    search: (route.query?.search as string) ?? ''
-  }
-})
 const computedQueryParams = computed(() => {
   return {
     populate: '*',
     pagination: {
-      page: routeQuery.value?.page ?? 1,
-      pageSize: routeQuery.value?.pageSize ?? 5
+      page: routeFilterParams.value?.page ?? 1,
+      pageSize: routeFilterParams.value?.pageSize ?? 5
     },
     sort: [
-      routeQuery.value?.sortOrder
-        ? `${routeQuery.value?.sortField}:${
-            sortConfig[routeQuery.value?.sortOrder as unknown as keyof typeof sortConfig]
-          }`
-        : (routeQuery.value?.sortField as string)
+      convertToSortString(
+        routeFilterParams.value?.sortField ?? '',
+        routeFilterParams.value?.sortOrder ?? 0
+      )
     ],
     filters: {
       user: {
         username: {
-          $contains: routeQuery.value.search
+          $contains: routeFilterParams.value.search
         }
       }
     }
   }
 })
 const queryClient = useQueryClient()
-const { data: response, isFetching } = useOrderDetailsQuery(computedQueryParams)
+const { data: response, isFetching } = useGetOrderDetailsQuery(computedQueryParams)
 const { mutate: deleteOrderDetail } = useDeleteOrderDetailMutation({
   onMutate: async (id) => {
     // Cancel any outgoing refetches
     // (so they don't overwrite our optimistic update)
-    await queryClient.cancelQueries({ queryKey: [QueryKey.ORDER_DETAIL] })
+    await queryClient.cancelQueries({ queryKey: [QueryKey.ORDER_DETAILS] })
 
     // Snapshot the previous value
     const previousOrderDetails = queryClient.getQueryData([
-      QueryKey.ORDER_DETAIL,
+      QueryKey.ORDER_DETAILS,
       computedQueryParams
     ]) as AxiosResponse<QueryResponse<OrderDetail[]>>
 
     // Optimistically update to the new value
     queryClient.setQueryData(
-      [QueryKey.ORDER_DETAIL, computedQueryParams],
+      [QueryKey.ORDER_DETAILS, computedQueryParams],
       (oldOrderDetail?: AxiosResponse<QueryResponse<OrderDetail[]>>) => {
         if (!oldOrderDetail) return oldOrderDetail
         return {
@@ -88,44 +76,33 @@ const { mutate: deleteOrderDetail } = useDeleteOrderDetailMutation({
       previousOrderDetails?: AxiosResponse<QueryResponse<OrderDetail[]>>
     }
     queryClient.setQueryData(
-      [QueryKey.ORDER_DETAIL, computedQueryParams],
+      [QueryKey.ORDER_DETAILS, computedQueryParams],
       mutationContext.previousOrderDetails ?? []
     )
   },
   onSettled: () => {
-    queryClient.invalidateQueries({ queryKey: [QueryKey.ORDER_DETAIL] })
+    queryClient.invalidateQueries({ queryKey: [QueryKey.ORDER_DETAILS] })
   }
 })
 
 const handlePageChange = (event: DataTablePageEvent) => {
-  router.push({
-    path: route.path,
-    query: {
-      ...routeQuery.value,
-      page: event.page + 1,
-      pageSize: event.rows
-    }
+  upsertRouteFieldParams({
+    page: event.page + 1,
+    pageSize: event.rows
   })
 }
 const handleSortChange = (event: DataTableSortEvent) => {
-  router.push({
-    path: route.path,
-    query: {
-      ...routeQuery.value,
-      sortOrder: event.sortOrder,
-      sortField: event.sortField as string
-    }
+  upsertRouteFieldParams({
+    sortOrder: event.sortOrder as number,
+    sortField: event.sortField as string
   })
 }
-const searchDebounce = throttle((e: Event) => {
-  router.push({
-    path: route.path,
-    query: {
-      ...routeQuery.value,
-      search: (e.target as any).value
-    }
+
+const handleOnSearch = (e: Event) => {
+  upsertRouteFieldParams({
+    search: (e.target as any).value
   })
-}, 250)
+}
 </script>
 
 <template>
@@ -138,10 +115,7 @@ const searchDebounce = throttle((e: Event) => {
         size="small"
         @click="router.push('/orders/create' as AppRoute)"
       ></Button>
-      <span class="p-input-icon-left ml-4">
-        <i class="pi pi-search"></i>
-        <InputText placeholder="Search" @input="searchDebounce" />
-      </span>
+      <SearchField @search="handleOnSearch" class="ml-4"></SearchField>
     </div>
     <DataTable
       :value="response?.data.data ?? []"
@@ -153,10 +127,10 @@ const searchDebounce = throttle((e: Event) => {
       :totalRecords="response?.data.meta?.pagination?.total"
       @page="handlePageChange"
       @sort="handleSortChange"
-      :sortField="routeQuery?.sortField"
-      :sortOrder="routeQuery?.sortOrder"
-      :first="0"
-      :rows="routeQuery?.pageSize"
+      :sortField="routeFilterParams?.sortField"
+      :sortOrder="routeFilterParams?.sortOrder"
+      :first="(routeFilterParams?.pageSize ?? 5) * ((routeFilterParams?.page ?? 1) - 1)"
+      :rows="routeFilterParams?.pageSize ?? 5"
       :rowsPerPageOptions="[5, 10, 20]"
       :pt="{
         wrapper: '',
@@ -172,7 +146,7 @@ const searchDebounce = throttle((e: Event) => {
       <Column>
         <template #body="{ data }">
           <div class="w-full flex justify-center items-center space-x-4">
-            <RouterLink :to="`/orders/${data.id}`">
+            <RouterLink :to="`/categories/${data.id}`">
               <i class="pi pi-pencil cursor-pointer"></i>
             </RouterLink>
             <i class="pi pi-trash cursor-pointer" @click="() => deleteOrderDetail(data.id)"></i>

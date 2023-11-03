@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { InputTextProps } from 'primevue/inputtext'
+import type { InputTextEmits, InputTextProps, InputTextSlots } from 'primevue/inputtext'
 import { Field, useField } from 'vee-validate'
-import { type HTMLAttributes, type LabelHTMLAttributes } from 'vue'
+import { useAttrs, type HTMLAttributes, type LabelHTMLAttributes, watch } from 'vue'
 import type { BaseFieldProps } from './baseFieldProps'
 import ReadOnlyText from './ReadOnlyText.vue'
 interface InputTextFieldProps extends /* @vue-ignore */ InputTextProps, BaseFieldProps {
@@ -10,8 +10,17 @@ interface InputTextFieldProps extends /* @vue-ignore */ InputTextProps, BaseFiel
   labelProps?: LabelHTMLAttributes
   containerProps?: HTMLAttributes
 }
+
+type ToDefinedEmit<
+  T extends Record<keyof T, (...args: any) => void>,
+  K extends keyof T = keyof T
+> = (e: K, ...args: Parameters<T[K]>) => void
+
 const props = defineProps<InputTextFieldProps>()
-const { value, errorMessage } = useField<string>(props.name)
+// const emits = defineEmits<ToDefinedEmit<InputTextEmits>>()
+defineSlots<InputTextSlots>()
+const attrs = useAttrs()
+const { value } = useField<string>(props.name)
 </script>
 
 <template>
@@ -25,7 +34,9 @@ const { value, errorMessage } = useField<string>(props.name)
   </template>
   <div v-else v-bind="props.containerProps" class="flex flex-col">
     <Field :name="props.name" #="{ field, errorMessage }">
-      <label v-bind="props.labelProps" class="mb-2">{{ props.label }}</label>
+      <label v-bind="props.labelProps" class="mb-2"
+        >{{ props.label }} {{ attrs.required ? '*' : '' }}</label
+      >
       <InputText
         v-bind="{
           ...$attrs,

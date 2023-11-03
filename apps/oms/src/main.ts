@@ -27,6 +27,7 @@ import Dropdown from 'primevue/dropdown'
 import { appQueryClient } from './configs/appQueryClient'
 import MultiSelect from 'primevue/multiselect'
 import InputNumber from 'primevue/inputnumber'
+import Editor from 'primevue/editor'
 
 // App
 const app = createApp(App)
@@ -51,6 +52,7 @@ app.component('OverlayPanel', OverlayPanel)
 app.component('Dropdown', Dropdown)
 app.component('MultiSelect', MultiSelect)
 app.component('InputNumber', InputNumber)
+app.component('Editor', Editor)
 
 // Pinia
 app.use(createPinia())

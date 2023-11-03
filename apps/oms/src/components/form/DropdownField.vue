@@ -33,7 +33,7 @@ const textReadOnly = computed(() => options?.find((o) => o.value === value.value
         'p-invalid': !!errorMessage
       }"
     />
-    <small class="p-error" id="text-error">{{ errorMessage }}</small>
+    <small class="p-error" id="dropdown-error">{{ errorMessage }}</small>
   </div>
 </template>
 

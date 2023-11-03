@@ -8,7 +8,7 @@ import { toValue } from 'vue'
 
 export const useUsersQuery: AxiosUseQuery<object, User[]> = (queryParams: object, opt = {}) => {
   return useQuery({
-    queryKey: [QueryKey.USER, queryParams],
+    queryKey: [QueryKey.USERS, queryParams],
     queryFn: () =>
       httpClient.get(ApiUrl.USERS, {
         params: toValue(queryParams)

@@ -19,7 +19,7 @@ export const useUpdateOrderDetailMutation: AxiosUseMutation<unknown, Partial<Ord
         opt.onSuccess?.(data, variable, context)
       }
       appQueryClient.invalidateQueries({
-        queryKey: [QueryKey.ORDER_DETAIL]
+        queryKey: [QueryKey.ORDER_DETAILS]
       })
     }
   })

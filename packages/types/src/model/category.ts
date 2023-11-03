@@ -5,4 +5,5 @@ export type Category = BaseModel & {
   slug: string;
   description?: string;
   childCategories?: Category[];
+  parentCategory?: Category;
 };

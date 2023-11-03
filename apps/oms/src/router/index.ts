@@ -2,7 +2,15 @@ import { createRouter, createWebHistory, useRoute, useRouter } from 'vue-router'
 import Shell from '@/components/shell/Shell.vue'
 import { getAuth } from '@/composables/useAuth'
 
-export type AppRoute = '/dashboard' | '/orders' | '/orders/:id' | '/orders/create' | '/auth/sign-in'
+export type AppRoute =
+  | '/dashboard'
+  | '/orders'
+  | '/orders/:id'
+  | '/orders/create'
+  | '/auth/sign-in'
+  | '/categories'
+  | '/categories/:id'
+  | '/categories/create'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +44,29 @@ const router = createRouter({
             {
               path: ':id',
               component: () => import('@/pages/OrderDetailPage.vue'),
+              props: {
+                mode: 'edit'
+              }
+            }
+          ]
+        },
+        {
+          path: 'categories',
+          children: [
+            {
+              path: '',
+              component: () => import('@/pages/CategoriesPage.vue')
+            },
+            {
+              path: 'create',
+              component: () => import('@/pages/CategoryPage.vue'),
+              props: {
+                mode: 'create'
+              }
+            },
+            {
+              path: ':id',
+              component: () => import('@/pages/CategoryPage.vue'),
               props: {
                 mode: 'edit'
               }

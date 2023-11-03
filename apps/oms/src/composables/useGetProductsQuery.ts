@@ -7,12 +7,12 @@ import type { Product } from 'types'
 import { ApiUrl } from 'types'
 import { toValue } from 'vue'
 
-export const useProductsQuery: AxiosUseQuery<object, QueryResponse<Product[]>> = (
+export const useGetProductsQuery: AxiosUseQuery<object, QueryResponse<Product[]>> = (
   queryParams: object,
   opt = {}
 ) => {
   return useQuery({
-    queryKey: [QueryKey.PRODUCT, queryParams],
+    queryKey: [QueryKey.PRODUCTS, queryParams],
     queryFn: () =>
       httpClient.get(ApiUrl.PRODUCTS, {
         params: toValue(queryParams)
