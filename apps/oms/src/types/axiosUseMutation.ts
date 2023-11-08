@@ -12,5 +12,5 @@ export type AxiosUseMutation<
 > = {
   (
     opt?: VueMutationObserverOptions<AxiosResponse<TData>, TError, TVariables, TContext>
-  ): UseMutationReturnType<TData, TError, TVariables, TContext>
+  ): UseMutationReturnType<AxiosResponse<TData>, TError, TVariables, TContext>
 }

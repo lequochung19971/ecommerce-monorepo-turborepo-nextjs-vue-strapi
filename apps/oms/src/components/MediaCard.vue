@@ -12,7 +12,8 @@ defineSlots<Pick<CardSlots, 'footer'>>()
   <Card
     :pt="{
       body: '!p-4',
-      title: '!leading-3 overflow-hidden text-ellipsis'
+      title: '!leading-3 overflow-hidden text-ellipsis',
+      content: '!p-0'
     }"
   >
     <template #header>

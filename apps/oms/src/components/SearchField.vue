@@ -2,6 +2,7 @@
 import { throttle } from 'lodash'
 const props = withDefaults(
   defineProps<{
+    modelValue: string
     wait?: number
     className?: string
   }>(),
@@ -12,9 +13,13 @@ const props = withDefaults(
 )
 const emit = defineEmits<{
   (e: 'search', event: Event): void
+  (e: 'update:modelValue', event: string): void
 }>()
 
-const handleOnInputThrottle = throttle((e) => emit('search', e), props.wait)
+const handleOnInputThrottle = throttle((e) => {
+  emit('search', e)
+  emit('update:modelValue', e.target.value)
+}, props.wait)
 </script>
 <template>
   <span :class="['p-input-icon-left', props.className]">
