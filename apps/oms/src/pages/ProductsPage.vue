@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SearchField from '@/components/SearchField.vue'
-import { useDeleteCategoryMutation } from '@/composables/useDeleteCategoryMutation'
-import { useGetCategoriesQuery } from '@/composables/useGetCategoriesQuery'
+import { useDeleteProductMutation } from '@/composables/useDeleteProductMutation'
+import { useGetProductsQuery } from '@/composables/useGetProductsQuery'
 import { useRouteFilter } from '@/composables/useRouteFilter'
 import { convertToSortString } from '@/helpers/convertToSortString'
 import type { AppRoute } from '@/router'
@@ -10,20 +10,20 @@ import type { QueryResponse } from '@/types/queryResponse'
 import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosResponse } from 'axios'
 import type { DataTablePageEvent, DataTableSortEvent } from 'primevue/datatable'
-import MultiSelect from 'primevue/multiselect'
 import { useToast } from 'primevue/usetoast'
-import type { Category } from 'types'
-import { computed, watch } from 'vue'
+import type { Category, Product } from 'types'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+
+const VITE_API_URL = import.meta.env.VITE_API_URL
 
 const router = useRouter()
 const [routeFilterParams, upsertRouteFieldParams] = useRouteFilter()
 const queryClient = useQueryClient()
 const toast = useToast()
-
-const queryCategoriesParams = computed(() => {
+const queryParams = computed(() => {
   return {
-    populate: ['childCategories', 'childCategories.childCategories', 'parentCategory'],
+    populate: '*',
     pagination: {
       page: routeFilterParams.value?.page ?? 1,
       pageSize: routeFilterParams.value?.pageSize ?? 5
@@ -41,45 +41,46 @@ const queryCategoriesParams = computed(() => {
     }
   }
 })
-const { data: response, isFetching } = useGetCategoriesQuery(queryCategoriesParams)
-const { mutate: deleteCategory } = useDeleteCategoryMutation({
+
+const { data: response, isFetching } = useGetProductsQuery(queryParams)
+const { mutate: deleteProduct } = useDeleteProductMutation({
   onMutate: async (id) => {
     // Cancel any outgoing refetches
     // (so they don't overwrite our optimistic update)
-    await queryClient.cancelQueries({ queryKey: [QueryKey.CATEGORIES] })
+    await queryClient.cancelQueries({ queryKey: [QueryKey.PRODUCTS] })
 
     // Snapshot the previous value
-    const previousCategories = queryClient.getQueryData([
-      QueryKey.CATEGORIES,
-      queryCategoriesParams
-    ]) as AxiosResponse<QueryResponse<Category[]>>
+    const previousProducts = queryClient.getQueryData([
+      QueryKey.PRODUCTS,
+      queryParams
+    ]) as AxiosResponse<QueryResponse<Product[]>>
 
     // Optimistically update to the new value
     queryClient.setQueryData(
-      [QueryKey.ORDER_DETAILS, queryCategoriesParams],
-      (oldCategory?: AxiosResponse<QueryResponse<Category[]>>) => {
-        if (!oldCategory) return oldCategory
+      [QueryKey.PRODUCTS, queryParams],
+      (oldProduct?: AxiosResponse<QueryResponse<Product[]>>) => {
+        if (!oldProduct) return oldProduct
         return {
-          ...oldCategory,
+          ...oldProduct,
           data: {
-            ...oldCategory.data,
-            data: oldCategory.data.data?.filter((od) => od.id !== id)
+            ...oldProduct.data,
+            data: oldProduct.data.data?.filter((od) => od.id !== id)
           }
         }
       }
     )
 
     // Return a context object with the snapshotted value
-    return { previousCategories }
+    return { previousProducts }
   },
   onError: (_err, _newTodo, context) => {
     toast.add({ severity: 'error', summary: 'Error', detail: 'Delete fail', life: 3000 })
     const mutationContext = context as {
-      previousCategories?: AxiosResponse<QueryResponse<Category[]>>
+      previousProducts?: AxiosResponse<QueryResponse<Product[]>>
     }
     queryClient.setQueryData(
-      [QueryKey.CATEGORIES, queryCategoriesParams],
-      mutationContext.previousCategories ?? []
+      [QueryKey.PRODUCTS, queryParams],
+      mutationContext.previousProducts ?? []
     )
   },
   onSuccess() {
@@ -111,22 +112,16 @@ const handleOnSearch = (e: Event) => {
     search: (e.target as any).value
   })
 }
-
-watch(
-  () => response.value?.data?.data,
-  (a) => console.log(a)
-)
 </script>
-
 <template>
-  <h1 class="text-xl mb-6">Categories</h1>
+  <h1 class="text-xl mb-6">Products</h1>
   <div class="rounded-xl border-default p-4 bg-white">
     <div class="flex w-full justify-end mb-4">
       <Button
-        label="Create Category"
+        label="Create Product"
         icon="pi pi-plus"
         size="small"
-        @click="router.push('/categories/create' as AppRoute)"
+        @click="router.push('/products/create' as AppRoute)"
       ></Button>
       <SearchField @search="handleOnSearch" class="ml-4"></SearchField>
     </div>
@@ -151,19 +146,30 @@ watch(
       }"
     >
       <Column field="id" header="ID"></Column>
+      <Column header="Image">
+        <template #body="{ data }">
+          <template v-if="(data as Product).media?.[0].url">
+            <img
+              :src="`${VITE_API_URL}${(data as Product).media?.[0].url}`"
+              :alt="(data as Product).media?.[0].alternativeText"
+              class="w-[3rem] shadow-lg rounded-lg"
+            />
+          </template>
+        </template>
+      </Column>
+
       <Column sortable field="name" header="Name"></Column>
-      <Column sortable field="parentCategory.name" header="Parent Category"></Column>
-      <Column field="childCategories" header="Child Categories">
+      <Column field="categories" header="Categories">
         <template #body="{ data = [] }">
-          <template v-if="data.childCategories?.length">
+          <template v-if="data.categories?.length">
             <MultiSelect
               class="w-full"
-              :modelValue="data.childCategories.map((c: Category) => c.id)"
+              :modelValue="data.categories.map((c: Category) => c.id)"
               dataKey="id"
               optionValue="id"
               optionLabel="name"
               display="chip"
-              :options="data.childCategories"
+              :options="data.categories"
               :pt="{
                 wrapper: 'w-full'
               }"
@@ -178,7 +184,7 @@ watch(
             <RouterLink :to="`/categories/${data.id}`">
               <i class="pi pi-pencil cursor-pointer"></i>
             </RouterLink>
-            <i class="pi pi-trash cursor-pointer" @click="deleteCategory(data.id)"></i>
+            <i class="pi pi-trash cursor-pointer" @click="deleteProduct(data.id)"></i>
           </div>
         </template>
       </Column>
@@ -189,5 +195,4 @@ watch(
     </DataTable>
   </div>
 </template>
-
 <style scoped></style>

@@ -22,4 +22,7 @@ export enum ApiUrl {
 
   ORDER_ITEMS = '/api/order-items',
   PAYMENT_DETAILS = '/api/payment-details',
+
+  UPLOAD = '/api/upload',
+  FILES = '/api/upload/files',
 }

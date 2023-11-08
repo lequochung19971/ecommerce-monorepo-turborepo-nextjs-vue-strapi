@@ -11,6 +11,9 @@ export type AppRoute =
   | '/categories'
   | '/categories/:id'
   | '/categories/create'
+  | '/products'
+  | '/products/:id'
+  | '/products/create'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,6 +70,29 @@ const router = createRouter({
             {
               path: ':id',
               component: () => import('@/pages/CategoryPage.vue'),
+              props: {
+                mode: 'edit'
+              }
+            }
+          ]
+        },
+        {
+          path: 'products',
+          children: [
+            {
+              path: '',
+              component: () => import('@/pages/ProductsPage.vue')
+            },
+            {
+              path: 'create',
+              component: () => import('@/pages/ProductPage.vue'),
+              props: {
+                mode: 'create'
+              }
+            },
+            {
+              path: ':id',
+              component: () => import('@/pages/ProductPage.vue'),
               props: {
                 mode: 'edit'
               }

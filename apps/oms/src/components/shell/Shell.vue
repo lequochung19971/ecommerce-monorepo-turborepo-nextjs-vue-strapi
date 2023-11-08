@@ -115,6 +115,53 @@ const navigationItems = ref<NavigationItem[]>([
         label: 'Categories'
       }
     ]
+  },
+  {
+    label: 'Products',
+    icon: 'pi pi-fw pi-box',
+    route: '/products',
+    children: [
+      {
+        route: '/products',
+        hidden: true,
+        breadcrumbs: [
+          {
+            label: 'Categories'
+          }
+        ]
+      },
+      {
+        route: '/products/create',
+        hidden: true,
+        breadcrumbs: [
+          {
+            route: '/products',
+            label: 'Products'
+          },
+          {
+            label: 'Create'
+          }
+        ]
+      },
+      {
+        route: '/products/:id',
+        hidden: true,
+        breadcrumbs: [
+          {
+            route: '/products',
+            label: 'Products'
+          },
+          {
+            label: 'Edit'
+          }
+        ]
+      }
+    ],
+    breadcrumbs: [
+      {
+        label: 'Products'
+      }
+    ]
   }
 ])
 const { logout } = useAuth()

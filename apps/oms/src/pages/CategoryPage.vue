@@ -6,22 +6,13 @@ import { useCreateCategoryMutation } from '@/composables/useCreateCategoryMutati
 import { useGetCategoriesQuery } from '@/composables/useGetCategoriesQuery'
 import { useGetCategoryQuery } from '@/composables/useGetCategoryQuery'
 import { useUpdateCategoryMutation } from '@/composables/useUpdateCategoryMutation'
-import httpClient from '@/httpClient'
 import type { AppRoute } from '@/router'
-import { QueryKey } from '@/types/queryKey'
-import type { QueryResponse } from '@/types/queryResponse'
-import { useInfiniteQuery } from '@tanstack/vue-query'
 import { toTypedSchema } from '@vee-validate/zod'
 import { kebabCase } from 'lodash'
 import { useToast } from 'primevue/usetoast'
-import {
-  ApiUrl,
-  type Category,
-  type CreateCategoryRequest,
-  type UpdateCategoryRequest
-} from 'types'
+import { type Category, type CreateCategoryRequest, type UpdateCategoryRequest } from 'types'
 import { useField, useForm } from 'vee-validate'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { z } from 'zod'
 

@@ -1,45 +1,41 @@
 <script setup lang="ts">
 import { Field, useField } from 'vee-validate'
-import { type HTMLAttributes, type LabelHTMLAttributes } from 'vue'
+import { type HTMLAttributes, type LabelHTMLAttributes, useAttrs, computed } from 'vue'
 import type { BaseFieldProps } from './baseFieldProps'
 import ReadOnlyText from './ReadOnlyText.vue'
-import type { InputNumberProps } from 'primevue/inputnumber'
-interface InputNumberFieldProps extends /* @vue-ignore */ InputNumberProps, BaseFieldProps {
-  label?: string
-  name: string
+import type { MultiSelectProps, MultiSelectSlots } from 'primevue/multiselect'
+interface MultipleSelectFieldProps extends /* @vue-ignore */ MultiSelectProps, BaseFieldProps {
   labelProps?: LabelHTMLAttributes
   containerProps?: HTMLAttributes
 }
-const props = defineProps<InputNumberFieldProps>()
-const { value, errorMessage } = useField<number>(props.name)
+const props = defineProps<MultipleSelectFieldProps>()
+defineSlots<MultiSelectSlots>()
+const { options } = useAttrs() as MultiSelectProps
+const { value, errorMessage, handleChange, handleBlur } = useField(props.name)
+const textReadOnly = computed(() => options?.find((o) => o.value === value.value)?.label ?? '')
 </script>
 
 <template>
   <template v-if="props.readOnly">
     <ReadOnlyText
-      :text="value"
+      :text="textReadOnly"
       :label="props.label"
       :labelProps="props.labelProps"
       :containerProps="props.containerProps"
-    ></ReadOnlyText>
+    />
   </template>
   <div v-else v-bind="props.containerProps" class="flex flex-col">
     <Field :name="props.name" #="{ field, errorMessage }">
       <label v-bind="props.labelProps" class="mb-2">{{ props.label }}</label>
-      <InputNumber
+      <MultiSelect
+        v-bind="$attrs"
         v-model="value"
-        v-bind="{
-          ...$attrs,
-          ...props
-        }"
         @blur="field.onBlur($event as unknown as Event)"
-        @change="field.onChange($event)"
-        @input="field.onInput($event.value)"
         :class="{
           'p-invalid': !!errorMessage
         }"
       />
-      <small class="p-error" id="text-error">{{ errorMessage }}</small>
+      <small class="p-error" id="multiple-select-error">{{ errorMessage }}</small>
     </Field>
   </div>
 </template>

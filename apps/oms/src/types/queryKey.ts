@@ -6,5 +6,6 @@ export enum QueryKey {
 
   PRODUCTS = 'products',
 
-  CATEGORIES = 'categories'
+  CATEGORIES = 'categories',
+  FILES = 'files'
 }

@@ -3,7 +3,7 @@ import type { LabelHTMLAttributes, HTMLAttributes } from 'vue'
 
 type ReadOnlyTextProps = {
   label?: string
-  text?: string
+  text?: string | number
   labelProps?: LabelHTMLAttributes
   containerProps?: HTMLAttributes
   textProps?: HTMLAttributes
