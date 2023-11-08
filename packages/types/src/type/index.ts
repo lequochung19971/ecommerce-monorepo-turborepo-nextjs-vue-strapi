@@ -5,3 +5,4 @@ export * from './dataSource';
 export * from './createCategoryRequest';
 export * from './updateCategoryRequest';
 export * from './createProductRequest';
+export * from './updateProductRequest';

@@ -5,6 +5,7 @@ export enum QueryKey {
   PAYMENT_DETAILS = 'paymentDetails',
 
   PRODUCTS = 'products',
+  PRODUCTS_2 = 'products_2',
 
   CATEGORIES = 'categories',
   FILES = 'files'

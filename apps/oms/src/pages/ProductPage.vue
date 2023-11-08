@@ -12,24 +12,56 @@ import { useToast } from 'primevue/usetoast'
 import type { Media, Product } from 'types'
 import { useField, useForm } from 'vee-validate'
 import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { z } from 'zod'
-import AssetDialog from '@/dialogs/AssetDialog.vue'
+import { useGetProductQuery } from '@/composables/useGetProductQuery'
+import { useUpdateProductMutation } from '@/composables/useUpdateProductMutation'
 
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
 type ProductForm = Pick<Product, 'name' | 'description' | 'price' | 'sku' | 'media'> & {
-  categoryIds: string[]
+  categoryIds: (string | number)[]
 }
-const { data: queryCategoriesResponse, isLoading: isGetCategoriesLoading } = useGetCategoriesQuery({
-  populate: '*'
-})
-const categories = computed(() => queryCategoriesResponse.value?.data.data)
-const toast = useToast()
 const props = defineProps<{
   mode: 'create' | 'edit'
 }>()
+const route = useRoute()
 const router = useRouter()
+const { data: queryCategoriesResponse, isLoading: isGetCategoriesLoading } = useGetCategoriesQuery({
+  populate: '*'
+})
+const { data: getProductResponse, isSuccess: isGetProductSuccess } = useGetProductQuery(
+  {
+    id: route.params.id as string,
+    params: {
+      populate: '*'
+    }
+  },
+  {
+    enabled: !!route.params.id && props.mode === 'edit'
+  }
+)
+const { mutate: updateProduct } = useUpdateProductMutation({
+  onSuccess: () => {
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Update successfully',
+      life: 3000
+    })
+    router.push('/products' as AppRoute)
+  },
+  onError: () => {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Update fail',
+      life: 3000
+    })
+  }
+})
+const categories = computed(() => queryCategoriesResponse.value?.data.data)
+const toast = useToast()
 
 const { mutate: createProduct, isLoading: isCreateProductLoading } = useCreateProductMutation({
   onSuccess: () => {
@@ -51,15 +83,26 @@ const { mutate: createProduct, isLoading: isCreateProductLoading } = useCreatePr
   }
 })
 
+const visible = ref(false)
+
 const { resetForm, handleSubmit, meta } = useForm<ProductForm>({
-  initialValues: {
-    name: '',
-    sku: '',
-    description: '',
-    price: 0,
-    categoryIds: [],
-    media: undefined
-  },
+  initialValues: getProductResponse.value?.data.data
+    ? {
+        categoryIds: getProductResponse.value?.data.data?.categories.map((c) => c.id),
+        description: getProductResponse.value?.data.data?.description,
+        media: getProductResponse.value?.data.data?.media,
+        name: getProductResponse.value?.data.data?.name,
+        price: +getProductResponse.value?.data.data?.price!,
+        sku: getProductResponse.value?.data.data?.sku
+      }
+    : {
+        name: '',
+        sku: '',
+        description: '',
+        price: 0,
+        categoryIds: [],
+        media: undefined
+      },
   validationSchema: toTypedSchema(
     z.object({
       name: z.string().nonempty().nullable(),
@@ -87,10 +130,40 @@ const handleSave = handleSubmit((formValue) => {
       description: formValue.description,
       media: formValue.media
     })
+  } else {
+    updateProduct({
+      id: getProductResponse.value?.data.data?.id!,
+      categories: formValue.categoryIds.map((id) => ({
+        id
+      })),
+      name: formValue.name,
+      price: formValue.price,
+      sku: formValue.sku,
+      description: formValue.description,
+      media: formValue.media
+    })
   }
 })
-watch(mediaFieldValue, (e) => console.log(e))
-const visible = ref(false)
+watch(
+  () => ({
+    product: getProductResponse.value?.data.data,
+    isSuccess: isGetProductSuccess
+  }),
+  ({ isSuccess, product }) => {
+    if (isSuccess) {
+      resetForm({
+        values: {
+          categoryIds: product?.categories.map((c) => c.id),
+          description: product?.description,
+          media: product?.media,
+          name: product?.name,
+          price: +product?.price!,
+          sku: product?.sku
+        }
+      })
+    }
+  }
+)
 </script>
 <template>
   <AssetDialog v-model:visible="visible" v-model:selectedMedias="mediaFieldValue"></AssetDialog>
@@ -151,9 +224,9 @@ const visible = ref(false)
           <header class="bg-gray-f9f border-default-b p-2 rounded-t-lg">
             <Button icon="pi pi-plus" rounded outlined @click="visible = true"></Button>
           </header>
-          <div v-if="mediaField.value.value?.length" class="px-4 pt-4">
+          <div v-if="mediaFieldValue?.length" class="px-4 pt-4">
             <Carousel
-              :value="mediaField.value.value"
+              :value="mediaFieldValue"
               :numScroll="1"
               :numVisible="1"
               :pt="{

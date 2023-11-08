@@ -90,7 +90,7 @@ const { mutate: deleteProduct } = useDeleteProductMutation({
       detail: 'Delete successfully',
       life: 3000
     })
-    queryClient.invalidateQueries({ queryKey: [QueryKey.CATEGORIES] })
+    queryClient.invalidateQueries({ queryKey: [QueryKey.PRODUCTS] })
   }
 })
 
@@ -181,7 +181,7 @@ const handleOnSearch = (e: Event) => {
       <Column>
         <template #body="{ data }">
           <div class="w-full flex justify-center items-center space-x-4">
-            <RouterLink :to="`/categories/${data.id}`">
+            <RouterLink :to="`/products/${data.id}`">
               <i class="pi pi-pencil cursor-pointer"></i>
             </RouterLink>
             <i class="pi pi-trash cursor-pointer" @click="deleteProduct(data.id)"></i>

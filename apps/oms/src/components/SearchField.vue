@@ -2,7 +2,7 @@
 import { throttle } from 'lodash'
 const props = withDefaults(
   defineProps<{
-    modelValue: string
+    modelValue?: string
     wait?: number
     className?: string
   }>(),

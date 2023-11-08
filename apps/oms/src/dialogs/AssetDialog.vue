@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, toRef, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import FileUpload, { type FileUploadUploaderEvent } from 'primevue/fileupload'
 import { useGetFilesQuery } from '@/composables/useGetFilesQuery'
@@ -81,6 +81,15 @@ const handleUpload = async (event: FileUploadUploaderEvent) => {
     toast.add({ severity: 'error', summary: 'Error', detail: 'Upload fail', life: 3000 })
   }
 }
+
+watch(
+  () => props.selectedMedias,
+  (s) => {
+    if (s) {
+      selectedMedias.value = [...s]
+    }
+  }
+)
 </script>
 <template>
   <Dialog
