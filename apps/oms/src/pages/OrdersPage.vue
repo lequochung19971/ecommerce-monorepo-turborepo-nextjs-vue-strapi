@@ -146,7 +146,7 @@ const handleOnSearch = (e: Event) => {
       <Column>
         <template #body="{ data }">
           <div class="w-full flex justify-center items-center space-x-4">
-            <RouterLink :to="`/categories/${data.id}`">
+            <RouterLink :to="`/orders/${data.id}`">
               <i class="pi pi-pencil cursor-pointer"></i>
             </RouterLink>
             <i class="pi pi-trash cursor-pointer" @click="() => deleteOrderDetail(data.id)"></i>

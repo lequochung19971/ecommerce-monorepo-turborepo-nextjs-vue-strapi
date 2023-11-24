@@ -16,6 +16,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { z } from 'zod'
 import { useGetProductQuery } from '@/composables/useGetProductQuery'
 import { useUpdateProductMutation } from '@/composables/useUpdateProductMutation'
+import AssetDialog from '@/dialogs/AssetDialog.vue'
 
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
@@ -32,7 +33,7 @@ const { data: queryCategoriesResponse, isLoading: isGetCategoriesLoading } = use
 })
 const { data: getProductResponse, isSuccess: isGetProductSuccess } = useGetProductQuery(
   {
-    id: route.params.id as string,
+    id: (route.params.id as string) ?? '',
     params: {
       populate: '*'
     }
